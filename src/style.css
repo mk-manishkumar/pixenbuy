@@ -1,0 +1,166 @@
+@import url(https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic);
+
+.all-images {
+  height: 250px;
+}
+
+header {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+  align-items: center;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.logo {
+  font-size: 2rem;
+}
+
+nav,
+.sideNav {
+  display: flex;
+  gap: 1rem;
+}
+
+nav a {
+  font-size: 1.1rem;
+  font-family: "Poppins", sans-serif;
+}
+
+nav a:hover {
+  color: #00d84a;
+  font-weight: 600;
+}
+
+.sideNav i {
+  font-size: 1.3rem;
+  background-color: #cad5e2;
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+}
+
+.sideNav i:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* end of header */
+
+#hero {
+  background: url(../assets/Misc/hero.png) no-repeat center center;
+  background-size: cover;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#hero p {
+  font-size: 1.3rem;
+  color: #333;
+}
+
+#hero .shop-now {
+  border: 2px solid #000;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  color: #333;
+  margin-top: 2rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  font-weight: 500;
+}
+
+#hero .shop-now:hover {
+  background-color: #333;
+  color: #fff;
+  border: none;
+}
+
+/* end of hero */
+
+#features {
+  width: 80%;
+  margin: 4rem auto;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.feature-list {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 1rem 1rem 2rem 1rem;
+  width: 350px;
+}
+
+.feature-list:hover {
+  box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+}
+
+.feature-list h3 {
+  margin: 1rem auto;
+  font-size: 2rem;
+}
+
+.feature-list a {
+  font-size: 1rem;
+  background-color: coral;
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.5rem;
+}
+
+.feature-list a:hover {
+  background-color: #333;
+  color: #fff;
+  border: none;
+}
+
+/* end of features */
+
+#products {
+  padding: 4rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 2rem;
+}
+
+.product-list {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 1rem 1rem 2rem 1rem;
+  width: 300px;
+}
+
+.product-list:hover {
+  box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+}
+
+.product-list h3 {
+  font-weight: 500;
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.product-list p {
+  color: #333;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.product-list a {
+  font-size: 1rem;
+  background-color: coral;
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.5rem;
+}
+
+.product-list a:hover {
+  background-color: #333;
+  color: #fff;
+  border: none;
+}
+
+/* end of products */
