@@ -2,6 +2,7 @@
 
 .all-images {
   height: 250px;
+  width: 100%;
 }
 
 header {
@@ -164,3 +165,54 @@ nav a:hover {
 }
 
 /* end of products */
+
+.category-section {
+  padding: 5rem 1rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.items {
+  width: 300px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 1rem 1rem 2rem 1rem;
+}
+
+.items:hover {
+  cursor: pointer;
+}
+
+.product-title {
+  font-weight: 500;
+  margin: 1rem 0;
+  display: block;
+  font-size: 1.9rem;
+}
+
+.product-title:hover {
+  color: #1b98f5;
+}
+
+.product-price {
+  color: gray;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.add-cart-btn {
+  background-color: coral;
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+}
+
+.add-cart-btn:hover {
+  background-color: #333;
+  color: #fff;
+  border: none;
+}
+
+/* end of fruits and veggies */
+
+
