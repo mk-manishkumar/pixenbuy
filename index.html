@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="src/style.css" />
   </head>
   <body>
-    <header>
+    <header class="fixed w-full opacity-1 bg-white">
       <div class="head flex gap-2 items-center">
         <i class="fa-solid fa-basket-shopping text-green-500 text-5xl"></i>
         <h1 class="logo">FreshMart</h1>
@@ -36,7 +36,7 @@
     <!-- end of header -->
 
     <!-- hero section -->
-    <div id="hero" class="mb-12">
+    <div id="hero" class=" mb-12">
       <h2 class="font-semibold text-4xl">
         Fresh and <span class="text-orange-500"> Organic </span> Products for
         you
@@ -119,7 +119,7 @@
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita,
           error.
         </p>
-        <a href="#">See More</a>
+        <a href="#beverages">See More</a>
       </div>
       <div class="product-list">
         <img
@@ -132,7 +132,7 @@
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita,
           error.
         </p>
-        <a href="#">See More</a>
+        <a href="#snacks">See More</a>
       </div>
       <div class="product-list">
         <img
@@ -145,7 +145,7 @@
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita,
           error.
         </p>
-        <a href="#">See More</a>
+        <a href="#personal-care">See More</a>
       </div>
     </div>
     <!-- end of product section  -->
@@ -438,7 +438,182 @@
     >
       Meat and Seafood
     </h2>
+
+    <div id="meat-seafood" class="text-center category-section">
+      <div class="items">
+        <img
+          src="assets/Meat and Seafood/chicken-1.jpg"
+          alt="chicken"
+          class="all-images"
+        />
+        <a href="" class="product-title">Chicken</a>
+        <p class="product-price">₹150</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Meat and Seafood/fish-1.jpg"
+          alt="fish"
+          class="all-images"
+        />
+        <a href="" class="product-title">Fish</a>
+        <p class="product-price">₹180</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Meat and Seafood/mutton-1.jpg"
+          alt="mutton"
+          class="all-images"
+        />
+        <a href="" class="product-title">Mutton</a>
+        <p class="product-price">₹210</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Meat and Seafood/salmon-1.jpg"
+          alt="salmon"
+          class="all-images"
+        />
+        <a href="" class="product-title">Salmon</a>
+        <p class="product-price">₹300</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Meat and Seafood/shrimp-1.jpg"
+          alt="shrimp"
+          class="all-images"
+        />
+        <a href="" class="product-title">Shrimp</a>
+        <p class="product-price">₹280</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+    </div>
     <!-- end of meat and seafood -->
+
+    <!-- household and cleaning -->
+    <h2
+      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-4/12 mt-20"
+    >
+      Household and Cleaning
+    </h2>
+
+    <div id="household" class="text-center category-section">
+      <div class="items">
+        <img
+          src="assets/Household and Cleaning/detergent-1.webp"
+          alt="detergent"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Detergent</a>
+        <p class="product-price">₹145</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Household and Cleaning/lizol-1.webp"
+          alt="lizol"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Lizol</a>
+        <p class="product-price">₹310</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Household and Cleaning/phenyl-1.webp"
+          alt="phenyl"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Phenyl</a>
+        <p class="product-price">₹185</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Household and Cleaning/harpic-1.webp"
+          alt="harpic"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Harpic</a>
+        <p class="product-price">₹165</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Household and Cleaning/glass-cleaner-1.webp"
+          alt="glass-cleaner"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Glass Cleaner</a>
+        <p class="product-price">₹215</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+    </div>
+    <!-- end of household and cleaning -->
+
+    <!-- personal care -->
+    <h2
+      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-64 mt-20"
+    >
+      Personal Care
+    </h2>
+
+    <div id="personal-care" class="text-center category-section">
+      <div class="items">
+        <img
+          src="assets/Personal Care/deodrant-2.webp"
+          alt="deodrant"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Deodrant</a>
+        <p class="product-price">₹325</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Personal Care/sunscreen-1.webp"
+          alt="sunscreen"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Sunscreen</a>
+        <p class="product-price">₹180</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Personal Care/serum-1.webp"
+          alt="serum"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Serum</a>
+        <p class="product-price">₹210</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Personal Care/hair-oil-1.webp"
+          alt="hair-oil"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Hair Oil</a>
+        <p class="product-price">₹250</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+      <div class="items">
+        <img
+          src="assets/Personal Care/shampoo-1.webp"
+          alt="shampoo"
+          class="mx-auto"
+        />
+        <a href="" class="product-title">Shampoo</a>
+        <p class="product-price">₹270</p>
+        <button class="add-cart-btn">ADD TO CART</button>
+      </div>
+    </div>
+    <!-- end of personal care -->
 
     <script src="src/app.js"></script>
   </body>
