@@ -5,6 +5,46 @@
   width: 100%;
 }
 
+.golden-star {
+  color: goldenrod;
+  font-size: 24px;
+}
+
+.normal-star {
+  font-size: 24px;
+  color: gray;
+}
+
+.half-golden-star {
+  position: relative;
+  color: goldenrod;
+  font-size: 24px;
+}
+
+.half-golden-star::before {
+  /* content: "\u{E3BA}"; */
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 50%;
+  color: #333;
+}
+
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield;
+  border: 1px solid gray;
+  border-radius: 3px;
+}
+
+/* end of global CSS */
+
 header {
   display: flex;
   justify-content: space-around;
