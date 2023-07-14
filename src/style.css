@@ -37,6 +37,10 @@ header {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
+.head {
+  cursor: pointer;
+}
+
 .logo {
   font-size: 2rem;
 }
@@ -238,3 +242,65 @@ nav a:hover {
 }
 
 /* end of fruits and veggies */
+
+#customer-review {
+  display: flex;
+  gap: 2rem;
+  padding: 5rem 1rem;
+  justify-content: space-evenly;
+}
+
+.reviews {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 1.5rem;
+  width: 350px;
+}
+
+#customer-review img {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  margin: auto;
+}
+
+.customer-review {
+  margin: 2rem 0;
+}
+
+.customer-name {
+  font-weight: 500;
+  font-size: 1.7rem;
+}
+
+/* end of customer's review */
+
+#blogs {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 1rem;
+  margin: 5rem 0;
+}
+
+.blog {
+  width: 350px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.blog-title {
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+}
+
+.blog-desc{
+  padding: 0.5rem;
+}
+
+.blog-btn{
+  margin: 1rem 0 1rem 0.5rem;
+  background: coral;
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.5rem;
+}
