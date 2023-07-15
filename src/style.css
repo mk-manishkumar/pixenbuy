@@ -428,8 +428,9 @@ nav a:hover {
   }
 
   .headline {
-    font-size: 1rem;
+    font-size: 1.5rem;
     width: auto;
+    margin: 0 1rem;
   }
 
   .category-section {
