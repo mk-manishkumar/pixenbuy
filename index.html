@@ -14,13 +14,15 @@
     <link rel="stylesheet" href="src/style.css" />
   </head>
   <body>
-    <header class="fixed w-full opacity-1 bg-white">
+    <header class="bg-white">
       <div class="head flex gap-2 items-center">
-        <i class="fa-solid fa-basket-shopping text-green-500 text-5xl"></i>
+        <i
+          class="fa-solid fa-basket-shopping text-green-500 text-2xl md:text-5xl"
+        ></i>
         <h1 class="logo">FreshMart</h1>
       </div>
       <nav>
-        <a href="#">Home</a>
+        <a href="#hero">Home</a>
         <a href="#features">Features</a>
         <a href="#products">Products</a>
         <a href="#">Categories</a>
@@ -31,6 +33,9 @@
         <i class="fa-solid fa-magnifying-glass"></i>
         <i class="fa-solid fa-cart-shopping"></i>
         <i class="fa-solid fa-user"></i>
+      </div>
+      <div class="hamburger">
+        <i class="fas fa-bars text-4xl"></i>
       </div>
     </header>
     <!-- end of header -->
@@ -151,11 +156,7 @@
     <!-- end of product section  -->
 
     <!-- fruits and veggies -->
-    <h2
-      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-80 mt-20"
-    >
-      Fruits and Veggies
-    </h2>
+    <h2 class="headline">Fruits and Veggies</h2>
 
     <div id="fruits-veggies" class="text-center category-section">
       <div class="items">
@@ -307,11 +308,7 @@
     <!-- end of fruits and veggies -->
 
     <!-- bakery -->
-    <h2
-      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-36 mt-20"
-    >
-      Bakery
-    </h2>
+    <h2 class="headline">Bakery</h2>
 
     <div id="bakery" class="text-center category-section">
       <div class="items">
@@ -448,11 +445,7 @@
     <!-- end of bakery -->
 
     <!-- beverages -->
-    <h2
-      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-48 mt-20"
-    >
-      Beverages
-    </h2>
+    <h2 class="headline">Beverages</h2>
 
     <div id="beverages" class="text-center category-section">
       <div class="items">
@@ -600,11 +593,7 @@
     <!-- end of beverages -->
 
     <!-- snacks -->
-    <h2
-      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-36 mt-20"
-    >
-      Snacks
-    </h2>
+    <h2 class="headline">Snacks</h2>
 
     <div id="snacks" class="text-center category-section">
       <div class="items">
@@ -752,11 +741,7 @@
     <!-- end of snacks -->
 
     <!-- dairy and eggs -->
-    <h2
-      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-72 mt-20"
-    >
-      Dairy and Eggs
-    </h2>
+    <h2 class="headline">Dairy and Eggs</h2>
 
     <div id="dairy-eggs" class="text-center category-section">
       <div class="items">
@@ -908,11 +893,7 @@
     <!-- end of dairy and eggs -->
 
     <!-- meat and seafood -->
-    <h2
-      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-80 mt-20"
-    >
-      Meat and Seafood
-    </h2>
+    <h2 class="headline">Meat and Seafood</h2>
 
     <div id="meat-seafood" class="text-center category-section">
       <div class="items">
@@ -1064,11 +1045,7 @@
     <!-- end of meat and seafood -->
 
     <!-- household and cleaning -->
-    <h2
-      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-4/12 mt-20"
-    >
-      Household and Cleaning
-    </h2>
+    <h2 class="headline">Household and Cleaning</h2>
 
     <div id="household" class="text-center category-section">
       <div class="items">
@@ -1220,11 +1197,7 @@
     <!-- end of household and cleaning -->
 
     <!-- personal care -->
-    <h2
-      class="font-semibold text-4xl mx-auto text-center p-2 pb-4 rounded-lg bg-green-500 text-white w-64 mt-20"
-    >
-      Personal Care
-    </h2>
+    <h2 class="headline">Personal Care</h2>
 
     <div id="personal-care" class="text-center category-section">
       <div class="items">
@@ -1508,12 +1481,110 @@
         <hr />
         <h3 class="blog-title">Select your Personal Care Products</h3>
         <p class="blog-desc">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit.  dolorum eius!
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. dolorum
+          eius!
         </p>
         <button class="blog-btn">Read More</button>
       </div>
     </div>
     <!-- end of blogs -->
+
+    <!-- footer -->
+    <footer id="footer">
+      <div class="info">
+        <div class="flex gap-2 items-center">
+          <i class="fa-solid fa-basket-shopping text-green-500 text-2xl"></i>
+          <h1 class="logo">FreshMart</h1>
+        </div>
+        <p class="info-desc my-4 text-gray-700 mb-8">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur,
+          error.
+        </p>
+        <div class="social-media">
+          <i class="fa-brands fa-facebook-f"></i>
+          <i class="fa-brands fa-twitter"></i>
+          <i class="fa-brands fa-instagram"></i>
+          <i class="fa-brands fa-linkedin"></i>
+        </div>
+      </div>
+      <div class="contact-info text-gray-700">
+        <h3 class="font-semibold text-2xl mb-7 text-black">Contact Info</h3>
+        <p class="mb-5">
+          <i class="fa-solid fa-phone text-orange-500 mr-2"></i>
+          <span>+123-456-7890</span>
+        </p>
+        <p class="mb-5">
+          <i class="fa-solid fa-phone text-orange-500 mr-2"></i>
+          <span>+111-222-3333</span>
+        </p>
+        <p class="mb-5">
+          <i class="fa-sharp fa-solid fa-envelope text-orange-500 mr-2"></i>
+          <span>abc@gmail.com</span>
+        </p>
+        <p>
+          <i class="fa-solid fa-location-dot text-orange-500 mr-2"></i>
+          <span>Delhi, India - 800001</span>
+        </p>
+      </div>
+      <div class="quick-links text-gray-700">
+        <h3 class="font-semibold text-2xl mb-7 text-black">Quick Links</h3>
+        <div class="mb-5">
+          <i
+            class="fa-sharp fa-solid fa-arrow-right-long text-orange-400 mr-1"
+          ></i>
+          <a href="#hero">Home</a>
+        </div>
+        <div class="mb-5">
+          <i
+            class="fa-sharp fa-solid fa-arrow-right-long text-orange-400 mr-1"
+          ></i>
+          <a href="#features">Features</a>
+        </div>
+        <div class="mb-5">
+          <i
+            class="fa-sharp fa-solid fa-arrow-right-long text-orange-400 mr-1"
+          ></i>
+          <a href="#products">Products</a>
+        </div>
+        <div class="mb-5">
+          <i
+            class="fa-sharp fa-solid fa-arrow-right-long text-orange-400 mr-1"
+          ></i>
+          <a href="#">Categories</a>
+        </div>
+        <div class="mb-5">
+          <i
+            class="fa-sharp fa-solid fa-arrow-right-long text-orange-400 mr-1"
+          ></i>
+          <a href="#customer-review">Reviews</a>
+        </div>
+        <div>
+          <i
+            class="fa-sharp fa-solid fa-arrow-right-long text-orange-400 mr-1"
+          ></i>
+          <a href="#blogs">Blogs</a>
+        </div>
+      </div>
+      <div class="newsletter text-gray-700">
+        <h3 class="font-semibold text-2xl mb-7 text-black">Newsletter</h3>
+        <p>Subscribe for latest updates.</p>
+        <input type="email" placeholder="Enter your email" />
+        <button>Subscribe</button>
+      </div>
+    </footer>
+
+    <p class="p-4 text-center text-2xl">
+      Created by
+      <a
+        href="https://www.linkedin.com/in/mk-manishkumar/"
+        class="text-orange-500"
+        target="_blank"
+        >Manish Kumar</a
+      >
+      | All Rights Reserved &copy;
+    </p>
+
+    <!-- end of footer -->
 
     <script src="src/app.js"></script>
   </body>
