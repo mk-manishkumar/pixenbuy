@@ -49,6 +49,7 @@ header {
   justify-content: space-around;
   padding: 1rem;
   align-items: center;
+  height: 12vh;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
@@ -68,16 +69,29 @@ nav,
 .sideNav {
   display: flex;
   gap: 1rem;
+  user-select: none;
 }
 
 nav a {
   font-size: 1.1rem;
   font-family: "Poppins", sans-serif;
+  cursor: pointer;
 }
 
 nav a:hover {
   color: #00d84a;
   font-weight: 600;
+}
+
+.dropdown-menu {
+  display: none;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 1rem;
+  color: #fff;
+  border-bottom: 1px solid #ccc;
 }
 
 .sideNav i {
@@ -90,6 +104,13 @@ nav a:hover {
 .sideNav i:hover {
   background-color: #333;
   color: #fff;
+}
+
+.searchBox {
+  display: none;
+  background-color: #333;
+  color: #ccc;
+  left: 80vw;
 }
 
 /* end of header */
