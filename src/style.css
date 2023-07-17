@@ -85,6 +85,10 @@ nav a:hover {
 
 .dropdown-menu {
   display: none;
+  position: absolute;
+  top: 12vh;
+  left: 50vw;
+  background: #333;
 }
 
 .dropdown-menu a {
@@ -107,10 +111,20 @@ nav a:hover {
 }
 
 .searchBox {
+  background-color: #ccc;
+  color: #333;
+  outline: none;
+  width: 250px;
+  position: absolute;
+  left: 74vw;
+  top: 12vh;
+  padding: 0.5rem;
+  font-size: 1rem;
   display: none;
-  background-color: #333;
-  color: #ccc;
-  left: 80vw;
+}
+
+.searchBox::placeholder {
+  color: #333;
 }
 
 /* end of header */
@@ -416,6 +430,10 @@ nav a:hover {
   .hamburger {
     display: inline;
   }
+
+  .searchBox {
+    left: 40vw;
+  }
 }
 
 @media (max-width: 650px) {
@@ -460,6 +478,11 @@ nav a:hover {
 
   #footer {
     padding: 3rem 1rem;
+  }
+
+  .searchBox{
+    left: 0.5rem;
+    width: 95%;
   }
 }
 

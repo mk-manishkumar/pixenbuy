@@ -18,10 +18,6 @@ categories.addEventListener("click", () => {
     isOpen = false;
   } else {
     dropDown.style.display = "block";
-    dropDown.style.position = "absolute";
-    dropDown.style.top = "12vh";
-    dropDown.style.left = "50vw";
-    dropDown.style.background = "#333";
     isOpen = true;
   }
 });
@@ -43,20 +39,35 @@ document.body.addEventListener("click", (event) => {
 
 // <-------------------------------------- End of Dropdown functionalities -------------------------------------->
 
-const searchBox = document.querySelector(".searchBox");
+const searchBox = document.createElement("input");
+searchBox.classList.add("searchBox");
+searchBox.placeholder = "Search your items...";
 
-searchBox.addEventListener("click", (event) => {
+const searchItems = document.getElementById("searchItems");
+let isSearch = false;
+
+searchItems.addEventListener("click", (event) => {
   event.stopPropagation(); // Prevent click event propagation to document body
 
-  if (searchBox.style.display === "" || searchBox.style.display === "none") {
-    searchBox.style.display = "block";
-    searchBox.style.position = "absolute";
-    searchBox.style.top = "12vh";
-  } else {
+  if (isSearch) {
     searchBox.style.display = "none";
+    isSearch = false;
+  } else {
+    searchBox.style.display = "block";
+    searchBox.focus();
+
+    isSearch = true;
   }
 });
 
-document.body.addEventListener("click", () => {
-  searchBox.style.display = "none";
+document.body.appendChild(searchBox);
+
+document.body.addEventListener("click", (e) => {
+  if (!searchBox.contains(e.target)) {
+    searchBox.style.display = "none";
+    isSearch = false;
+  }
 });
+
+// <--------------------------------- End of search Icon functionalitites ---------------------------------->
+
