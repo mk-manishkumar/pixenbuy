@@ -71,3 +71,20 @@ document.body.addEventListener("click", (e) => {
 
 // <--------------------------------- End of search Icon functionalitites ---------------------------------->
 
+const productName = document.querySelectorAll(".product-title");
+
+searchBox.addEventListener("input", () => {
+  const searchText = searchBox.value.toLowerCase();
+  
+  // create a div for searched items
+  const searchDiv = document.createElement("div");
+  searchDiv.classList.add("searchDiv");
+
+  // to check whether searched product exists
+  productName.forEach((product) => {
+    const productNameText = product.textContent.toLowerCase();
+
+    if (productNameText.includes(searchText)) {
+    }
+  });
+});

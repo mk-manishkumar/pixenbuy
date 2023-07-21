@@ -127,6 +127,18 @@ nav a:hover {
   color: #333;
 }
 
+.searchDiv {
+  width: 250px;
+  height: 400px;
+  background-color: #333;
+  color: #fff;
+  position: absolute;
+  left: 74vw;
+  top: 15vh;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
 /* end of header */
 
 #hero {
@@ -419,6 +431,11 @@ nav a:hover {
   border-radius: 0.5rem;
 }
 
+.newsletter button:hover {
+  background-color: #333;
+  color: #fff;
+}
+
 /* end of footer */
 
 /* MEDIA QUERIES */
@@ -480,7 +497,7 @@ nav a:hover {
     padding: 3rem 1rem;
   }
 
-  .searchBox{
+  .searchBox {
     left: 0.5rem;
     width: 95%;
   }
