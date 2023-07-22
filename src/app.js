@@ -118,3 +118,32 @@ document.body.addEventListener("click", (e) => {
     searchDiv.style.display = "none";
   }
 });
+
+// <--------------------------------- End of search list functionalitites ---------------------------------->
+
+const cartEl = document.querySelector("#cart");
+
+// creating cart div
+const cartDiv = document.createElement("div");
+cartDiv.classList.add("cartDiv");
+document.body.appendChild(cartDiv);
+
+let isCart = false;
+
+// cart event-listener
+cartEl.addEventListener("click", () => {
+  if (isCart) {
+    cartDiv.style.display = "none";
+    isCart = false;
+  } else {
+    cartDiv.style.display = "block";
+    isCart = true;
+  }
+});
+
+document.body.addEventListener("click", (e) => {
+  if (!cartEl.contains(e.target)) {
+    cartDiv.style.display = "none";
+    isCart = false;
+  }
+});

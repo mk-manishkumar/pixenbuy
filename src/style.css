@@ -147,6 +147,19 @@ nav a:hover {
   cursor: pointer;
 }
 
+.cartDiv {
+  width: 350px;
+  height: 600px;
+  background-color: #fff;
+  position: absolute;
+  top: 12vh;
+  left: 64vw;
+  padding: 0.7rem;
+  overflow: auto;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  display: none;
+}
+
 /* end of header */
 
 #hero {
