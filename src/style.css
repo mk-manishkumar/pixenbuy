@@ -130,13 +130,21 @@ nav a:hover {
 .searchDiv {
   width: 250px;
   height: 400px;
-  background-color: #333;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   position: absolute;
   left: 74vw;
-  top: 15vh;
+  top: 17vh;
   padding: 0.5rem;
   font-size: 1rem;
+  overflow: auto;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.result-item {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  cursor: pointer;
 }
 
 /* end of header */
@@ -448,7 +456,8 @@ nav a:hover {
     display: inline;
   }
 
-  .searchBox {
+  .searchBox,
+  .searchDiv {
     left: 40vw;
   }
 }
@@ -497,7 +506,8 @@ nav a:hover {
     padding: 3rem 1rem;
   }
 
-  .searchBox {
+  .searchBox,
+  .searchDiv {
     left: 0.5rem;
     width: 95%;
   }
