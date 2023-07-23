@@ -49,6 +49,8 @@ let isSearch = false;
 searchItems.addEventListener("click", (event) => {
   dropDown.style.display = "none";
   isOpen = false;
+  cartDiv.style.display = "none";
+  isCart = false;
 
   event.stopPropagation(); // Prevent click event propagation to document body
 
@@ -136,14 +138,67 @@ cartEl.addEventListener("click", () => {
     cartDiv.style.display = "none";
     isCart = false;
   } else {
-    cartDiv.style.display = "block";
+    cartDiv.style.display = "flex";
     isCart = true;
   }
 });
 
 document.body.addEventListener("click", (e) => {
-  if (!cartEl.contains(e.target)) {
+  if (!cartEl.contains(e.target) && !cartDiv.contains(e.target)) {
     cartDiv.style.display = "none";
     isCart = false;
   }
+});
+
+// <---------------------------------- end of cart functionalities ----------------------------------------->
+
+const addCartBtns = document.querySelectorAll(".add-cart-btn");
+
+let cartList = [];
+
+let content = "";
+
+function pushCart(productItem) {
+  content += `
+    <div class="productsInCart">
+      <div>
+        <img src="${productItem.img}" alt="" class="cart-img">
+      </div>
+      <div>
+        <h3>${productItem.name}</h3>
+        <p>Quantity : ${productItem.count}</p>
+        <p>Price : ${productItem.price}</p>
+      </div>
+    </div>
+  `;
+
+  cartDiv.innerHTML =
+    content +
+    `<div class="checkout-btn">
+      <button class="checkout">CHECKOUT</button>
+    </div>`;
+}
+
+function addCart(e) {
+  const productDiv = e.target.parentElement;
+  const productImage = productDiv.querySelector("img").getAttribute("src");
+  const productName = productDiv.querySelector(".product-title").textContent;
+  const productPriceText =
+    productDiv.querySelector(".product-price").textContent;
+  const productPrice = parseInt(productPriceText.replace("₹", ""));
+  const productQuantityInput = productDiv.querySelector(".quantity input");
+  const productQuantity = parseInt(productQuantityInput.value);
+
+  const productItem = {
+    img: productImage,
+    name: productName,
+    count: productQuantity,
+    price: productPrice * productQuantity,
+  };
+
+  pushCart(productItem);
+}
+
+addCartBtns.forEach((addCartBtn) => {
+  addCartBtn.addEventListener("click", addCart);
 });
