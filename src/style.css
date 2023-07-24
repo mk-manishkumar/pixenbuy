@@ -158,6 +158,13 @@ nav a:hover {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   display: none;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.cartProductDiv {
+  height: 500px;
+  overflow: auto;
+  display: none;
 }
 
 .productsInCart {
@@ -166,7 +173,6 @@ nav a:hover {
   align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid #ccc;
-  overflow: auto;
 }
 
 .productsInCart h3 {
@@ -180,10 +186,14 @@ nav a:hover {
 }
 
 .checkout-btn {
-  margin-top: auto;
+  height: 50px;
+  margin-top: 1rem;
+  position: absolute;
+  bottom: 1rem;
+  width: 325px;
 }
 
-.checkout{
+.checkout {
   width: 100%;
   background-color: coral;
   color: #fff;

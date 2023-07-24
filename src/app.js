@@ -172,8 +172,14 @@ function pushCart(productItem) {
     </div>
   `;
 
+  const cartProductDiv = document.createElement("div");
+  cartProductDiv.classList.add("cartProductDiv");
+  cartDiv.appendChild(cartProductDiv);
+
+  cartProductDiv.innerHTML = content;
+
   cartDiv.innerHTML =
-    content +
+    cartProductDiv.innerHTML +
     `<div class="checkout-btn">
       <button class="checkout">CHECKOUT</button>
     </div>`;
