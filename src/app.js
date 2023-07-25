@@ -154,8 +154,6 @@ document.body.addEventListener("click", (e) => {
 
 const addCartBtns = document.querySelectorAll(".add-cart-btn");
 
-let cartList = [];
-
 let content = "";
 
 function pushCart(productItem) {
