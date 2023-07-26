@@ -130,6 +130,14 @@ const cartDiv = document.createElement("div");
 cartDiv.classList.add("cartDiv");
 document.body.appendChild(cartDiv);
 
+// creating cart btn
+const cartBtn = document.createElement("button");
+cartBtn.id = "cartBtn";
+cartBtn.textContent = "Checkout";
+document.body.appendChild(cartBtn);
+
+
+
 let isCart = false;
 
 // cart event-listener
@@ -138,9 +146,10 @@ cartEl.addEventListener("click", () => {
     cartDiv.style.display = "none";
     isCart = false;
   } else {
-    cartDiv.style.display = "flex";
+    cartDiv.style.display = "block";
     isCart = true;
   }
+
 });
 
 document.body.addEventListener("click", (e) => {
@@ -156,31 +165,22 @@ const addCartBtns = document.querySelectorAll(".add-cart-btn");
 
 let content = "";
 
+// Function to handle the cart items
 function pushCart(productItem) {
-  content += `
-    <div class="productsInCart">
-      <div>
-        <img src="${productItem.img}" alt="" class="cart-img">
-      </div>
-      <div>
-        <h3>${productItem.name}</h3>
-        <p>Quantity : ${productItem.count}</p>
-        <p>Price : ${productItem.price}</p>
-      </div>
+  const cartItem = document.createElement("div");
+  cartItem.classList.add("productsInCart");
+  cartItem.innerHTML = `
+    <div>
+      <img src="${productItem.img}" alt="" class="cart-img">
+    </div>
+    <div>
+      <h3>${productItem.name}</h3>
+      <p>Quantity : ${productItem.count}</p>
+      <p>Price : ${productItem.price}</p>
     </div>
   `;
 
-  const cartProductDiv = document.createElement("div");
-  cartProductDiv.classList.add("cartProductDiv");
-  cartDiv.appendChild(cartProductDiv);
-
-  cartProductDiv.innerHTML = content;
-
-  cartDiv.innerHTML =
-    cartProductDiv.innerHTML +
-    `<div class="checkout-btn">
-      <button class="checkout">CHECKOUT</button>
-    </div>`;
+  cartDiv.appendChild(cartItem);
 }
 
 function addCart(e) {

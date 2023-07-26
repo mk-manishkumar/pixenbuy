@@ -149,7 +149,7 @@ nav a:hover {
 
 .cartDiv {
   width: 350px;
-  height: 600px;
+  height: 550px;
   background-color: #fff;
   position: fixed;
   top: 12vh;
@@ -157,14 +157,7 @@ nav a:hover {
   padding: 0.7rem;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   display: none;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.cartProductDiv {
-  height: 500px;
   overflow: auto;
-  display: none;
 }
 
 .productsInCart {
@@ -185,21 +178,13 @@ nav a:hover {
   height: 80px;
 }
 
-.checkout-btn {
-  height: 50px;
-  margin-top: 1rem;
-  position: absolute;
-  bottom: 1rem;
-  width: 325px;
-}
-
-.checkout {
-  width: 100%;
+#cartBtn {
   background-color: coral;
   color: #fff;
   padding: 0.7rem;
   font-size: 1.2rem;
   font-weight: 700;
+  text-transform: uppercase;
 }
 
 /* end of header */
