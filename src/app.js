@@ -51,6 +51,8 @@ searchItems.addEventListener("click", (event) => {
   isOpen = false;
   cartDiv.style.display = "none";
   isCart = false;
+  cartBtn.style.display = "none";
+  isCartBtn = false;
 
   event.stopPropagation(); // Prevent click event propagation to document body
 
@@ -136,26 +138,30 @@ cartBtn.id = "cartBtn";
 cartBtn.textContent = "Checkout";
 document.body.appendChild(cartBtn);
 
-
-
 let isCart = false;
+let isCartBtn = false;
 
 // cart event-listener
 cartEl.addEventListener("click", () => {
   if (isCart) {
     cartDiv.style.display = "none";
+    cartBtn.style.display = "none";
     isCart = false;
+    isCartBtn = false;
   } else {
     cartDiv.style.display = "block";
+    cartBtn.style.display = "block";
     isCart = true;
+    isCartBtn = true;
   }
-
 });
 
 document.body.addEventListener("click", (e) => {
   if (!cartEl.contains(e.target) && !cartDiv.contains(e.target)) {
     cartDiv.style.display = "none";
+    cartBtn.style.display = "none";
     isCart = false;
+    isCartBtn = false;
   }
 });
 
@@ -163,21 +169,22 @@ document.body.addEventListener("click", (e) => {
 
 const addCartBtns = document.querySelectorAll(".add-cart-btn");
 
-let content = "";
-
 // Function to handle the cart items
 function pushCart(productItem) {
   const cartItem = document.createElement("div");
   cartItem.classList.add("productsInCart");
   cartItem.innerHTML = `
-    <div>
+    <div class="product-image">
       <img src="${productItem.img}" alt="" class="cart-img">
     </div>
-    <div>
+    <div class="product-details">
       <h3>${productItem.name}</h3>
       <p>Quantity : ${productItem.count}</p>
       <p>Price : ${productItem.price}</p>
     </div>
+    <div class="remove-icon">
+      <i class="fa-solid fa-xmark" id="remove-cart-item"></i>
+    </div
   `;
 
   cartDiv.appendChild(cartItem);
