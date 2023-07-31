@@ -232,9 +232,12 @@ function addCart(e) {
     price: productPrice * productQuantity,
   };
 
+  alert(`${productItem.count} ${productItem.name} added to the cart.`);
   pushCart(productItem);
 }
 
 addCartBtns.forEach((addCartBtn) => {
   addCartBtn.addEventListener("click", addCart);
 });
+
+// <------------------------------------- End of Cart Section -------------------------------------------->
