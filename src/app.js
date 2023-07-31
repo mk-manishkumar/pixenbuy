@@ -171,23 +171,48 @@ const addCartBtns = document.querySelectorAll(".add-cart-btn");
 
 // Function to handle the cart items
 function pushCart(productItem) {
-  const cartItem = document.createElement("div");
-  cartItem.classList.add("productsInCart");
-  cartItem.innerHTML = `
-    <div class="product-image">
-      <img src="${productItem.img}" alt="" class="cart-img">
-    </div>
-    <div class="product-details">
-      <h3>${productItem.name}</h3>
-      <p>Quantity : ${productItem.count}</p>
-      <p>Price : ${productItem.price}</p>
-    </div>
-    <div class="remove-icon">
-      <i class="fa-solid fa-xmark" id="remove-cart-item"></i>
-    </div
-  `;
+  const existingCartItem = Array.from(cartDiv.children).find((item) => {
+    const itemName = item.querySelector(".product-details h3").textContent;
+    return itemName === productItem.name;
+  });
 
-  cartDiv.appendChild(cartItem);
+  if (existingCartItem) {
+    // If the product is already present, update its quantity
+    const quantityEl = existingCartItem.querySelector(".product-details p");
+    const currentQuantity = parseInt(
+      quantityEl.textContent.replace("Quantity : ", "")
+    );
+    const newQuantity = currentQuantity + productItem.count;
+    quantityEl.textContent = `Quantity : ${newQuantity}`;
+
+    // Update the price
+    const priceEl = existingCartItem.querySelector(
+      ".product-details p:last-child"
+    );
+    const productPriceText = productItem.price;
+    const currentPrice = parseInt(priceEl.textContent.replace("Price : ", ""));
+    const newPrice = currentPrice + productPriceText;
+    priceEl.textContent = `Price : ${newPrice}`;
+  } else {
+    // If the product is not already present, add it to the cart
+    const cartItem = document.createElement("div");
+    cartItem.classList.add("productsInCart");
+    cartItem.innerHTML = `
+      <div class="product-image">
+        <img src="${productItem.img}" alt="" class="cart-img">
+      </div>
+      <div class="product-details">
+        <h3>${productItem.name}</h3>
+        <p>Quantity : ${productItem.count}</p>
+        <p>Price : ${productItem.price}</p>
+      </div>
+      <div class="remove-icon">
+        <i class="fa-solid fa-xmark" id="remove-cart-item"></i>
+      </div>
+    `;
+
+    cartDiv.appendChild(cartItem);
+  }
 }
 
 function addCart(e) {
