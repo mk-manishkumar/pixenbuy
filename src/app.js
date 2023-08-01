@@ -53,6 +53,8 @@ searchItems.addEventListener("click", (event) => {
   isCart = false;
   cartBtn.style.display = "none";
   isCartBtn = false;
+  navBar.style.display = "none";
+  isNav = false;
 
   event.stopPropagation(); // Prevent click event propagation to document body
 
@@ -241,3 +243,39 @@ addCartBtns.forEach((addCartBtn) => {
 });
 
 // <------------------------------------- End of Cart Section -------------------------------------------->
+
+const hamburger = document.querySelector("#hamburger-icon");
+const navBar = document.querySelector("nav");
+let isNav = false;
+
+function createNavBar() {
+  if (isNav) {
+    navBar.style.display = "none";
+    isNav = false;
+  } else {
+    navBar.style.display = "flex";
+    categories.style.display = "none";
+    isNav = true;
+  }
+}
+
+document.body.addEventListener("click", (e) => {
+  if (!hamburger.contains(e.target)) {
+    navBar.style.display = "none";
+    isNav = false;
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 950) {
+    navBar.style.display = "flex";
+    categories.style.display = "inline";
+    isNav = true;
+  } else if (window.innerWidth < 950) {
+    navBar.style.display = "none";
+    categories.style.display = "none";
+    isNav = false;
+  }
+});
+
+hamburger.addEventListener("click", createNavBar);

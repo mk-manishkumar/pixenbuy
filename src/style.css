@@ -522,6 +522,19 @@ nav a:hover {
 @media (max-width: 950px) {
   nav {
     display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 12vh;
+    right: 0;
+    background-color: #fff;
+    height: 100vh;
+    width: 250px;
+    box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
+  }
+
+  nav a {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem;
   }
 
   .hamburger {
