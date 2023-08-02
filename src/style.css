@@ -193,7 +193,7 @@ nav a:hover {
   display: none;
 }
 
-.product-details{
+.product-details {
   width: 200px;
 }
 
@@ -563,12 +563,7 @@ nav a:hover {
 
   .sideNav i {
     font-size: 1rem;
-    padding: 0;
     background-color: transparent;
-  }
-
-  .sideNav {
-    gap: 10px;
   }
 
   .hamburger i {
@@ -614,8 +609,6 @@ nav a:hover {
   }
 }
 
-@media (max-width: 375px) {
-}
 
 @media (max-width: 300px) {
   #hero {
