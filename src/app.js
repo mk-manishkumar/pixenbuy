@@ -53,8 +53,12 @@ searchItems.addEventListener("click", (event) => {
   isCart = false;
   cartBtn.style.display = "none";
   isCartBtn = false;
-  navBar.style.display = "none";
-  isNav = false;
+
+  // this will only happen when navbar gets hidden because of screen size
+  if (window.innerWidth < 950) {
+    navBar.style.display = "none";
+    isNav = false;
+  }
 
   event.stopPropagation(); // Prevent click event propagation to document body
 
@@ -260,7 +264,7 @@ function createNavBar() {
 }
 
 document.body.addEventListener("click", (e) => {
-  if (!hamburger.contains(e.target)) {
+  if (!hamburger.contains(e.target) && window.innerWidth < 950) {
     navBar.style.display = "none";
     isNav = false;
   }
