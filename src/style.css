@@ -563,11 +563,16 @@ nav a:hover {
 
   .sideNav i {
     font-size: 1rem;
+    padding: 0.5rem;
     background-color: transparent;
   }
 
+  .sideNav{
+    gap: 1px;
+  }
+
   .hamburger i {
-    font-size: 1.2rem;
+    font-size: 1.8rem;
   }
 
   .all-images {
