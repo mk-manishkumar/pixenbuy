@@ -114,8 +114,13 @@ searchBox.addEventListener("input", () => {
         resultItem.classList.add("result-item");
         resultItem.textContent = product.textContent;
         resultItem.addEventListener("click", () => {
-          // Scroll to the corresponding product when the result item is clicked
-          product.scrollIntoView({ behavior: "auto", block: "nearest" });
+          if (window.innerWidth < 700) {
+            //  scroll for mobile
+            product.scrollIntoView({ behavior: "auto", block: "nearest" });
+          } else {
+            // Scroll to the corresponding product when the result item is clicked
+            product.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
         });
         searchDiv.appendChild(resultItem);
       }
