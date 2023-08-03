@@ -111,7 +111,7 @@ searchBox.addEventListener("input", () => {
         resultItem.textContent = product.textContent;
         resultItem.addEventListener("click", () => {
           // Scroll to the corresponding product when the result item is clicked
-          product.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          product.scrollIntoView({ behavior: "auto", block: "nearest" });
         });
         searchDiv.appendChild(resultItem);
       }
