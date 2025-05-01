@@ -8,7 +8,6 @@ import { supabase } from "./supabase-client";
  * @param {'buyer' | 'seller'} role
  */
 
-
 export const signUpUser = async (email, password, name, role) => {
   try {
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -77,10 +76,22 @@ export const getUserRole = async () => {
     // First check in buyer
     const { data: buyer, error: buyerError } = await supabase.from("buyer").select("id").eq("id", user.id).maybeSingle();
 
+    /*
+    const { data: buyer, error: buyerError } = ... - This unpacks the result:
+      - data is renamed to buyer (contains the user record or null)
+      - error is renamed to buyerError (contains any error that occurred)
+    */
+
     if (buyerError) throw buyerError;
     if (buyer) return { role: "buyer" };
+    /*
+    .maybeSingle() - This tells Supabase to return:
+      - A single record if one is found
+      - Null if no record is found
+      - An error if multiple records are found
+      */
 
-    // Then check in seller
+    // Then check in seller  (eq === equal)
     const { data: seller, error: sellerError } = await supabase.from("seller").select("id").eq("id", user.id).maybeSingle();
 
     if (sellerError) throw sellerError;
