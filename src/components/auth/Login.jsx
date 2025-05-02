@@ -70,12 +70,12 @@ const Login = () => {
 
           <div className="my-3">
             <Label className="text-sm sm:text-base">Email</Label>
-            <Input type="email" placeholder="Enter your email" value={input.email} name="email" onChange={handleChange} className="mt-1 sm:mt-2 text-sm sm:text-base w-full p-1 outline-0 border border-2 rounded-md" />
+            <Input type="email" placeholder="Enter your email" value={input.email} name="email" onChange={handleChange} className="mt-1 sm:mt-2 text-sm sm:text-base w-full p-1" />
           </div>
 
           <div className="my-3">
             <Label className="text-sm sm:text-base">Password</Label>
-            <Input type="password" placeholder="Enter your password" value={input.password} name="password" onChange={handleChange} className="mt-1 sm:mt-2 text-sm sm:text-base w-full p-1 outline-0 border border-2 rounded-md" />
+            <Input type="password" placeholder="Enter your password" value={input.password} name="password" onChange={handleChange} className="mt-1 sm:mt-2 text-sm sm:text-base w-full p-1" />
           </div>
 
           <div className="my-4 sm:my-5">
