@@ -8,8 +8,21 @@ import { supabase } from "./supabase-client";
  * @param {'buyer' | 'seller'} role
  */
 
-export const signUpUser = async (email, password, name, role) => {
+export const signUpUser = async (email, password, fullname, role, avatar = null) => {
   try {
+    // Check if email already exists in the respective table
+    const table = role === "buyer" ? "buyer" : "seller";
+    const { data: existingUser, error: checkError } = await supabase.from(table).select("email").eq("email", email).single();
+
+    if (existingUser) {
+      return { error: "Email already exists. Please use a different email address." };
+    }
+
+    if (checkError && checkError.code !== "PGRST116") {
+      // PGRST116 is "no rows returned" error which is expected if email doesn't exist
+      console.error("[signUpUser] Error checking email uniqueness:", checkError);
+    }
+
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -26,7 +39,8 @@ export const signUpUser = async (email, password, name, role) => {
       {
         id: user.id,
         email,
-        name,
+        fullname,
+        avatar,
       },
     ]);
 
@@ -38,6 +52,7 @@ export const signUpUser = async (email, password, name, role) => {
     return { error: err.message };
   }
 };
+
 
 /**
  * Sign in an existing user using email and password.
@@ -116,4 +131,20 @@ export const signOutUser = async () => {
     console.error("[signOutUser] Error:", err.message);
     return { error: err.message };
   }
+};
+
+
+/**
+ * Upload profile iamge
+ */
+export const uploadProfileImage = async (userId, file) => {
+  const fileExt = file.name.split(".").pop();
+  const fileName = `${userId}.${fileExt}`;
+  const { data, error } = await supabase.storage.from("profile-images").upload(fileName, file, { upsert: true });
+
+  if (error) return { error };
+
+  const { data: publicUrlData } = supabase.storage.from("profile-images").getPublicUrl(data.path);
+
+  return { url: publicUrlData.publicUrl };
 };

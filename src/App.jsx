@@ -1,9 +1,10 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
+import Signup from "./components/auth/Signup";
 import Home from './components/pages/Home';
 import Category from './components/pages/Category';
+import { Toaster } from "@/components/ui/sonner"; 
 
 const appRouter = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const appRouter = createBrowserRouter([
   },
   {
     path: "/signup",
-    element: <Register />,
+    element: <Signup />,
   },
   {
     path: "/category",
@@ -26,7 +27,10 @@ const appRouter = createBrowserRouter([
 
 const App = () => {
   return (
-    <RouterProvider router={appRouter} />
+    <>
+      <Toaster richColors position="top-center" /> 
+      <RouterProvider router={appRouter} />
+    </>
   );
 };
 

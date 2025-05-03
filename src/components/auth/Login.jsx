@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../shared/Header";
+import Footer from "../shared/Footer";
 // import { signInUser, getUserRole } from "@/supabase/authService"; // Uncomment once wired
 // import { useDispatch } from "react-redux"; // If using redux
 // import { setUser, setRole } from "@/store/authSlice"; // If using redux
@@ -66,7 +67,7 @@ const Login = () => {
       <Header />
       <div className="flex-grow flex justify-center items-center px-4 sm:px-6 py-8">
         <form onSubmit={handleSubmit} className="w-full max-w-md sm:max-w-lg md:max-w-xl border border-gray-200 rounded-md p-4 sm:p-6 my-4 sm:my-6 md:my-10 shadow-md">
-          <h1 className="font-bold text-xl mb-4 sm:mb-5">Login</h1>
+          <h1 className="font-bold text-xl mb-4 sm:mb-5 text-center">Login</h1>
 
           <div className="my-3">
             <Label className="text-sm sm:text-base">Email</Label>
@@ -102,12 +103,13 @@ const Login = () => {
 
           <div className="text-xs sm:text-sm text-center sm:text-left">
             Don't have an account?{" "}
-            <Link to="/register" className="text-blue-600 hover:underline">
+            <Link to="/signup" className="text-blue-600 hover:underline">
               Click here to create an account
             </Link>
           </div>
         </form>
       </div>
+      <Footer />
     </div>
   );
 };
