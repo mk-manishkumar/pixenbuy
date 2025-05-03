@@ -29,8 +29,8 @@ const Header = () => {
         {/* Search - Desktop only */}
         <div className="hidden md:flex items-center flex-grow max-w-md w-full mx-4">
           <div className="relative w-full">
-            <Input type="text" placeholder="Search for Products, Brands and More" className="w-full py-3 px-4 pl-5 pr-14 border border-gray-300 rounded-lg focus:border-[#16d66d] focus:ring-[#16d66d] text-base" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-            <Button className="absolute right-0 top-0 bottom-0 px-4 bg-[#16d66d] hover:bg-[#14c061] text-white rounded-r-lg">
+            <Input type="text" placeholder="Search for Products, Brands and More" className="w-full pr-12 border border-gray-300 rounded-lg focus:border-[#16d66d] focus:ring-[#16d66d] text-base" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <Button className="absolute right-0 top-0 h-full px-3 bg-[#16d66d] hover:bg-[#14c061] text-white rounded-r-lg" type="submit">
               <Search size={20} />
             </Button>
           </div>
@@ -40,23 +40,23 @@ const Header = () => {
         <div className="flex items-center space-x-3">
           {/* Desktop */}
           <div className="hidden sm:flex items-center space-x-5">
-            <Button variant="ghost" className="hover:bg-transparent text-gray-800">
-              <ShoppingCart size={30} />
+            <Button variant="ghost" className="hover:bg-transparent text-gray-800 h-12 w-12 p-2" onClick={() => navigate("/cart")}>
+              <ShoppingCart size={24} />
             </Button>
-            <Button variant="outline" className="border-none hover:bg-gray-100">
-              <User size={30} />
+            <Button variant="ghost" className="hover:bg-gray-100 text-gray-800 h-12 w-12 p-2" onClick={() => navigate("/profile")}>
+              <User size={24} />
             </Button>
           </div>
 
           {/* Mobile icons */}
           <div className="flex sm:hidden space-x-2">
-            <Button variant="ghost" size="icon" className="text-gray-700">
+            {/* <Button variant="ghost" size="icon" className="text-gray-700">
               <Search size={20} />
-            </Button>
-            <Button variant="ghost" size="icon" className="text-gray-700">
+            </Button> */}
+            <Button variant="ghost" size="icon" className="text-gray-700" onClick={() => navigate("/profile")}>
               <User size={20} />
             </Button>
-            <Button variant="ghost" size="icon" className="text-gray-700">
+            <Button variant="ghost" size="icon" className="text-gray-700" onClick={() => navigate("/cart")}>
               <ShoppingCart size={20} />
             </Button>
           </div>
@@ -74,8 +74,8 @@ const Header = () => {
           </Link>
         </div>
         <div className="relative w-full">
-          <Input type="text" placeholder="Search for Products, Brands and More" className="w-full py-2 px-4 border border-gray-300 rounded-lg" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-          <Button className="absolute right-0 top-0 bottom-0 px-3 bg-[#16d66d] hover:bg-[#14c061] text-white rounded-r-lg">
+          <Input type="text" placeholder="Search for Products, Brands and More" className="w-full pr-12 border border-gray-300 rounded-lg" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          <Button className="absolute right-0 top-0 h-full px-3 bg-[#16d66d] hover:bg-[#14c061] text-white rounded-r-lg" type="submit">
             <Search size={18} />
           </Button>
         </div>
