@@ -29,6 +29,7 @@ const Signup = () => {
     setInput({ ...input, file: e.target.files?.[0] });
   };
 
+  // submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -41,7 +42,7 @@ const Signup = () => {
 
     // Check if email already exists in the respective table
     const table = input.role === "buyer" ? "buyer" : "seller";
-    const { data: existingUser, error: checkError } = await supabase.from(table).select("email").eq("email", input.email).single();
+    const { data: existingUser, error: checkError } = await supabase.from(table).select("email").eq("email", input.email).maybeSingle();
 
     if (existingUser) {
       toast.error("Email already exists. Please use a different email address.");
@@ -60,6 +61,9 @@ const Signup = () => {
     const { data, error } = await supabase.auth.signUp({
       email: input.email,
       password: input.password,
+      options: {
+        data: { role: input.role },
+      },
     });
 
     if (error) {
@@ -95,13 +99,14 @@ const Signup = () => {
         fullname: input.fullname,
         email: input.email,
         avatar: avatarUrl,
+        role: input.role,
       },
     ]);
 
     if (profileError) {
-      toast.error("Account created, but saving profile info failed.");
+      toast.error("Account creating failed.");
     } else {
-      toast.success("Account created! Please check your email to confirm.");
+      toast.success("Account created!");
       navigate("/login");
     }
 
