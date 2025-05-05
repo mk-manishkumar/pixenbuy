@@ -3,10 +3,26 @@ import { Search, ShoppingCart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../../../supabase/supabase-client";
+import { useAuth } from "../../context/AuthContext";
+import { toast } from "sonner";
 
 const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const { setUser } = useAuth();
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      toast.error("Logout failed.");
+    } else {
+      toast.success("Logged out successfully.");
+      setUser(null);
+      navigate("/login");
+    }
+  };
 
   return (
     <header className="w-full bg-white shadow-sm py-3 px-4 md:px-6">
@@ -46,6 +62,9 @@ const Header = () => {
             <Button variant="ghost" className="hover:bg-gray-100 text-gray-800 h-12 w-12 p-2" onClick={() => navigate("/profile")}>
               <User size={24} />
             </Button>
+            <button onClick={handleLogout} className="text-gray-800 hover:underline focus:outline-none">
+              Logout
+            </button>
           </div>
 
           {/* Mobile icons */}
