@@ -29,7 +29,6 @@ const Signup = () => {
     setInput({ ...input, file: e.target.files?.[0] });
   };
 
-  // submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,86 +39,120 @@ const Signup = () => {
 
     setLoading(true);
 
-    // Check if email already exists in the respective table
-    const table = input.role === "buyer" ? "buyer" : "seller";
-    const { data: existingUser, error: checkError } = await supabase.from(table).select("email").eq("email", input.email).maybeSingle();
+    try {
+      console.log("Starting signup process for:", input.email, "with role:", input.role);
 
-    if (existingUser) {
-      toast.error("Email already exists. Please use a different email address.");
-      setLoading(false);
-      return;
-    }
-
-    if (checkError && checkError.code !== "PGRST116") {
-      // PGRST116 is "no rows returned" error which is expected if email doesn't exist
-      toast.error("Error while checking email uniqueness");
-      setLoading(false);
-      return;
-    }
-
-    // Sign up using Supabase Auth
-    const { data, error } = await supabase.auth.signUp({
-      email: input.email,
-      password: input.password,
-      options: {
-        data: { role: input.role },
-      },
-    });
-
-    if (error) {
-      toast.error(error.message);
-      setLoading(false);
-      return;
-    }
-
-    const userId = data.user?.id;
-
-    // Upload image
-    let avatarUrl = null;
-
-    if (input.file && userId) {
-      const fileExt = input.file.name.split(".").pop();
-      const fileName = `${userId}.${fileExt}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage.from("profile-images").upload(fileName, input.file, {
-        cacheControl: "3600",
-        upsert: true,
+      // Step 1: Sign up the user with Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email: input.email,
+        password: input.password,
+        options: {
+          data: { role: input.role },
+        },
       });
 
-      if (uploadError) {
-        toast.warning("Account created but image upload failed.");
-      } else {
-        const { data: publicUrlData } = supabase.storage.from("profile-images").getPublicUrl(uploadData.path);
-        avatarUrl = publicUrlData.publicUrl;
+      if (error) {
+        console.error("Auth signup error:", error);
+        toast.error(error.message);
+        setLoading(false);
+        return;
       }
-    }
 
-    const { error: profileError } = await supabase.from(table).insert([
-      {
-        id: userId,
-        fullname: input.fullname,
-        email: input.email,
-        avatar: avatarUrl,
-        role: input.role,
-      },
-    ]);
+      const userId = data.user?.id;
+      if (!userId) {
+        console.error("No user ID returned from auth signup");
+        toast.error("Failed to create account: No user ID returned");
+        setLoading(false);
+        return;
+      }
 
-    if (profileError) {
-      toast.error("Account creating failed.");
-    } else {
-      toast.success("Account created!");
+      console.log("User created successfully with ID:", userId);
+
+      // Step 2: Handle avatar upload if present
+      let avatarUrl = null;
+      if (input.file) {
+        try {
+          const fileExt = input.file.name.split(".").pop();
+          const fileName = `${userId}.${fileExt}`;
+          console.log("Uploading avatar with filename:", fileName);
+
+          const { data: uploadData, error: uploadError } = await supabase.storage.from("profile-images").upload(fileName, input.file, {
+            cacheControl: "3600",
+            upsert: true,
+          });
+
+          if (uploadError) {
+            console.error("Avatar upload error:", uploadError);
+            toast.warning("Account created, but image upload failed.");
+          } else {
+            const { data: publicUrlData } = supabase.storage.from("profile-images").getPublicUrl(uploadData.path);
+
+            avatarUrl = publicUrlData.publicUrl;
+            console.log("Avatar uploaded successfully:", avatarUrl);
+          }
+        } catch (uploadErr) {
+          console.error("Avatar upload exception:", uploadErr);
+          toast.warning("Account created, but image upload failed unexpectedly.");
+        }
+      }
+
+      // Step 3: Add user to the appropriate role table
+      const table = input.role === "buyer" ? "buyer" : "seller";
+      console.log(`Adding user to ${table} table with ID:`, userId);
+
+      const { error: profileError } = await supabase.from(table).insert([
+        {
+          id: userId,
+          fullname: input.fullname,
+          email: input.email,
+          avatar: avatarUrl,
+        },
+      ]);
+
+      if (profileError) {
+        console.error(`Error inserting into ${table} table:`, profileError);
+        toast.error(`Failed to complete profile setup: ${profileError.message}`);
+
+        // Verify if the record was actually created despite the error
+        const { data: checkData } = await supabase.from(table).select("*").eq("id", userId);
+
+        console.log(`Verification check of ${table} table:`, checkData);
+
+        setLoading(false);
+        return;
+      }
+
+      // Step 4: Verify the record was created
+      const { data: verifyData, error: verifyError } = await supabase.from(table).select("*").eq("id", userId).single();
+
+      if (verifyError || !verifyData) {
+        console.error("Verification error or no data found:", verifyError);
+        toast.warning("Account may have been created but verification failed. Please try logging in.");
+      } else {
+        console.log("User profile created and verified:", verifyData);
+        toast.success("Account created successfully!");
+      }
+
+      // Sign out the user (they need to login explicitly)
+      await supabase.auth.signOut();
       navigate("/login");
+    } catch (err) {
+      console.error("Unexpected error during signup:", err);
+      toast.error("An unexpected error occurred during signup.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   useEffect(() => {
     const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/");
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session) navigate("/");
+      } catch (err) {
+        console.error("Session check failed", err);
       }
     };
 
@@ -180,7 +213,7 @@ const Signup = () => {
 
           {loading ? (
             <Button className="w-full cursor-pointer" disabled>
-              Please wait...
+              Creating Account...
             </Button>
           ) : (
             <Button type="submit" className="w-full cursor-pointer">

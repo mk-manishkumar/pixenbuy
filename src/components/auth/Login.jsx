@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,6 @@ const Login = () => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  // LOGIN FORM SUBMISSION
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -32,41 +31,66 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { data: signInData, error } = await supabase.auth.signInWithPassword({
+      console.log("[Login] Attempting login for email:", email);
+
+      // Sign in the user with Supabase Auth
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) {
-        toast.error(error.message);
+      if (signInError) {
+        console.error("[Login] Login error:", signInError);
+        toast.error(signInError.message);
+        setLoading(false);
         return;
       }
 
-      const { user } = signInData;
-
-      console.log(user.user_metadata);
-      if (!user?.user_metadata?.role) {
-        toast.error("User role is missing.");
-        await supabase.auth.signOut();
+      const user = signInData?.user;
+      if (!user) {
+        console.error("[Login] No user returned from signin");
+        toast.error("Login failed: User not found.");
+        setLoading(false);
         return;
       }
 
-      // Set user context with session info and role
-      setUser({
-        id: user.id,
-        email: user.email,
-        role: user.user_metadata.role,
-      });
+      console.log("[Login] User authenticated successfully:", user.id);
 
-      toast.success(`Welcome back, ${user.user_metadata.role}!`);
-      navigate("/");
+      // Let the AuthContext handle setting the user with role
+      // The enhanced setUser in AuthContext will automatically fetch the role
+      await setUser(user);
+
+      // Navigate after a small delay to ensure AuthContext has updated
+      setTimeout(() => {
+        toast.success(`Welcome back!`);
+        navigate("/");
+        setLoading(false);
+      }, 500);
     } catch (err) {
-      toast.error("An unexpected error occurred.");
-      console.error(err);
-    } finally {
+      console.error("[Login] Login error:", err);
+      toast.error("An unexpected error occurred: " + err.message);
       setLoading(false);
     }
   };
+
+  // Check for existing session on component mount
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session) {
+          console.log("[Login] Existing session found, redirecting");
+          navigate("/");
+        }
+      } catch (err) {
+        console.error("[Login] Session check failed", err);
+      }
+    };
+
+    checkSession();
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -4,17 +4,20 @@ import { supabase } from "./supabase-client";
  * Sign up a new user and insert them into the appropriate role table.
  * @param {string} email
  * @param {string} password
- * @param {string} name
+ * @param {string} fullname
  * @param {'buyer' | 'seller'} role
+ * @param {File} [avatar=null] Optional avatar file
  */
-
 export const signUpUser = async (email, password, fullname, role, avatar = null) => {
   try {
+    console.log(`Starting signUpUser for ${email} with role ${role}`);
+
     // Check if email already exists in the respective table
     const table = role === "buyer" ? "buyer" : "seller";
     const { data: existingUser, error: checkError } = await supabase.from(table).select("email").eq("email", email).single();
 
     if (existingUser) {
+      console.log("Email already exists in", table, "table");
       return { error: "Email already exists. Please use a different email address." };
     }
 
@@ -23,28 +26,74 @@ export const signUpUser = async (email, password, fullname, role, avatar = null)
       console.error("[signUpUser] Error checking email uniqueness:", checkError);
     }
 
+    // Sign up user with Supabase Auth
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: { role }, // Store role in user metadata
+      },
     });
 
-    if (signUpError) throw signUpError;
+    if (signUpError) {
+      console.error("[signUpUser] Sign up error:", signUpError);
+      throw signUpError;
+    }
 
     const user = signUpData.user;
-    if (!user) throw new Error("User not returned after signup");
+    if (!user) {
+      console.error("[signUpUser] User not returned after signup");
+      throw new Error("User not returned after signup");
+    }
 
-    const insertTable = role === "buyer" ? "buyer" : "seller";
+    console.log("[signUpUser] User created with ID:", user.id);
 
-    const { error: insertError } = await supabase.from(insertTable).insert([
+    // Handle avatar upload if provided
+    let avatarUrl = null;
+    if (avatar) {
+      const fileExt = avatar.name.split(".").pop();
+      const fileName = `${user.id}.${fileExt}`;
+
+      console.log("[signUpUser] Uploading avatar:", fileName);
+      const { data: uploadData, error: uploadError } = await supabase.storage.from("profile-images").upload(fileName, avatar, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+      if (uploadError) {
+        console.error("[signUpUser] Avatar upload error:", uploadError);
+      } else {
+        const { data: publicUrlData } = supabase.storage.from("profile-images").getPublicUrl(uploadData.path);
+
+        avatarUrl = publicUrlData.publicUrl;
+        console.log("[signUpUser] Avatar URL:", avatarUrl);
+      }
+    }
+
+    // Insert user profile into respective table
+    console.log(`[signUpUser] Adding user to ${table} table`);
+    const { error: insertError } = await supabase.from(table).insert([
       {
         id: user.id,
         email,
         fullname,
-        avatar,
+        avatar: avatarUrl,
       },
     ]);
 
-    if (insertError) throw insertError;
+    if (insertError) {
+      console.error(`[signUpUser] Error inserting into ${table}:`, insertError);
+      throw insertError;
+    }
+
+    // Verify the record was created
+    const { data: verifyData, error: verifyError } = await supabase.from(table).select("*").eq("id", user.id).single();
+
+    if (verifyError) {
+      console.error("[signUpUser] Verification error:", verifyError);
+    } else {
+      console.log(`[signUpUser] ${role} record created and verified:`, verifyData);
+    }
 
     return { user, role };
   } catch (err) {
@@ -53,7 +102,6 @@ export const signUpUser = async (email, password, fullname, role, avatar = null)
   }
 };
 
-
 /**
  * Sign in an existing user using email and password.
  * @param {string} email
@@ -61,13 +109,19 @@ export const signUpUser = async (email, password, fullname, role, avatar = null)
  */
 export const signInUser = async (email, password) => {
   try {
+    console.log("[signInUser] Attempting login for:", email);
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error("[signInUser] Login error:", error);
+      throw error;
+    }
 
+    console.log("[signInUser] Login successful for user:", data.user.id);
     return { user: data.user };
   } catch (err) {
     console.error("[signInUser] Error:", err.message);
@@ -85,33 +139,72 @@ export const getUserRole = async () => {
       error: userError,
     } = await supabase.auth.getUser();
 
-    if (userError) throw userError;
-    if (!user) return { role: null };
+    if (userError) {
+      console.error("[getUserRole] Error getting user:", userError);
+      throw userError;
+    }
 
-    // First check in buyer
-    const { data: buyer, error: buyerError } = await supabase.from("buyer").select("id").eq("id", user.id).maybeSingle();
+    if (!user) {
+      console.log("[getUserRole] No authenticated user found");
+      return { role: null };
+    }
 
-    /*
-    const { data: buyer, error: buyerError } = ... - This unpacks the result:
-      - data is renamed to buyer (contains the user record or null)
-      - error is renamed to buyerError (contains any error that occurred)
-    */
+    console.log("[getUserRole] Checking role for user:", user.id);
 
-    if (buyerError) throw buyerError;
-    if (buyer) return { role: "buyer" };
-    /*
-    .maybeSingle() - This tells Supabase to return:
-      - A single record if one is found
-      - Null if no record is found
-      - An error if multiple records are found
-      */
+    // First check in buyer table
+    const { data: buyer, error: buyerError } = await supabase.from("buyer").select("*").eq("id", user.id).maybeSingle();
 
-    // Then check in seller  (eq === equal)
-    const { data: seller, error: sellerError } = await supabase.from("seller").select("id").eq("id", user.id).maybeSingle();
+    if (buyerError && buyerError.code !== "PGRST116") {
+      console.error("[getUserRole] Error checking buyer table:", buyerError);
+      throw buyerError;
+    }
 
-    if (sellerError) throw sellerError;
-    if (seller) return { role: "seller" };
+    if (buyer) {
+      console.log("[getUserRole] Found buyer record:", buyer);
+      return { role: "buyer", profile: buyer };
+    }
 
+    // Then check in seller table
+    const { data: seller, error: sellerError } = await supabase.from("seller").select("*").eq("id", user.id).maybeSingle();
+
+    if (sellerError && sellerError.code !== "PGRST116") {
+      console.error("[getUserRole] Error checking seller table:", sellerError);
+      throw sellerError;
+    }
+
+    if (seller) {
+      console.log("[getUserRole] Found seller record:", seller);
+      return { role: "seller", profile: seller };
+    }
+
+    // If no role found in tables, check user metadata as fallback
+    if (user.user_metadata && user.user_metadata.role) {
+      const roleFromMetadata = user.user_metadata.role;
+      console.log("[getUserRole] Found role in user metadata:", roleFromMetadata);
+
+      // This is a recovery path - we should recreate the record in the appropriate table
+      console.log("[getUserRole] Attempting to recreate missing role record");
+      const table = roleFromMetadata === "buyer" ? "buyer" : "seller";
+
+      try {
+        await supabase.from(table).insert([
+          {
+            id: user.id,
+            email: user.email,
+            fullname: user.user_metadata.fullname || user.email.split("@")[0],
+          },
+        ]);
+
+        console.log(`[getUserRole] Created missing ${roleFromMetadata} record`);
+        return { role: roleFromMetadata };
+      } catch (recreateError) {
+        console.error("[getUserRole] Failed to recreate role record:", recreateError);
+        // Continue to return the role anyway
+        return { role: roleFromMetadata };
+      }
+    }
+
+    console.log("[getUserRole] No role found for user:", user.id);
     return { role: null };
   } catch (err) {
     console.error("[getUserRole] Error:", err.message);
@@ -124,8 +217,10 @@ export const getUserRole = async () => {
  */
 export const signOutUser = async () => {
   try {
+    console.log("[signOutUser] Signing out user");
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+    console.log("[signOutUser] Sign out successful");
     return { success: true };
   } catch (err) {
     console.error("[signOutUser] Error:", err.message);
@@ -133,18 +228,34 @@ export const signOutUser = async () => {
   }
 };
 
-
 /**
- * Upload profile iamge
+ * Upload profile image
  */
 export const uploadProfileImage = async (userId, file) => {
-  const fileExt = file.name.split(".").pop();
-  const fileName = `${userId}.${fileExt}`;
-  const { data, error } = await supabase.storage.from("profile-images").upload(fileName, file, { upsert: true });
+  try {
+    console.log("[uploadProfileImage] Uploading profile image for user:", userId);
 
-  if (error) return { error };
+    if (!file) {
+      console.error("[uploadProfileImage] No file provided");
+      return { error: "No file provided" };
+    }
 
-  const { data: publicUrlData } = supabase.storage.from("profile-images").getPublicUrl(data.path);
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${userId}.${fileExt}`;
 
-  return { url: publicUrlData.publicUrl };
+    const { data, error } = await supabase.storage.from("profile-images").upload(fileName, file, { upsert: true });
+
+    if (error) {
+      console.error("[uploadProfileImage] Upload error:", error);
+      return { error };
+    }
+
+    const { data: publicUrlData } = supabase.storage.from("profile-images").getPublicUrl(data.path);
+
+    console.log("[uploadProfileImage] Upload successful, URL:", publicUrlData.publicUrl);
+    return { url: publicUrlData.publicUrl };
+  } catch (err) {
+    console.error("[uploadProfileImage] Error:", err.message);
+    return { error: err.message };
+  }
 };
