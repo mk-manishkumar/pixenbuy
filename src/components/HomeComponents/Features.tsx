@@ -9,7 +9,7 @@ export const Features = () => {
 
       <div className="flex flex-col md:flex-row justify-around items-stretch gap-12">
         {/* Feature Card 1 */}
-        <div className="text-center max-w-sm p-5 shadow-lg flex flex-col items-center">
+        <div className="text-center max-w-sm p-5 shadow-lg flex flex-col items-center mx-auto">
           <Avatar className="h-24 w-24 mb-4">
             <AvatarImage src="/f1.png" alt="Seamless Experience" />
           </Avatar>
@@ -18,7 +18,7 @@ export const Features = () => {
         </div>
 
         {/* Feature Card 2 */}
-        <div className="text-center max-w-sm p-5 shadow-lg flex flex-col items-center">
+        <div className="text-center max-w-sm p-5 shadow-lg flex flex-col items-center mx-auto">
           <Avatar className="h-24 w-24 mb-4">
             <AvatarImage src="/f2.png" alt="Fast Delivery" />
           </Avatar>
@@ -27,7 +27,7 @@ export const Features = () => {
         </div>
 
         {/* Feature Card 3 */}
-        <div className="text-center max-w-sm p-5 shadow-lg flex flex-col items-center">
+        <div className="text-center max-w-sm p-5 shadow-lg flex flex-col items-center mx-auto">
           <Avatar className="h-24 w-24 mb-4">
             <AvatarImage src="/f3.png" alt="24/7 Support" />
           </Avatar>

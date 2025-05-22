@@ -9,14 +9,14 @@ const Navbar: React.FC = () => {
   return (
     <nav className="w-full shadow-md bg-white">
       <div className="flex justify-between items-center py-3 px-6 md:px-12">
-        <Link to="/" className="text-2xl md:text-3xl font-bold text-green-600">
-          PixenBuy
+        <Link to="/" className="text-2xl md:text-3xl font-bold">
+          <span className="text-red-600">PIXEN</span>BUY
         </Link>
 
         {/* Desktop Search */}
         <div className="hidden md:flex items-center">
           <Input placeholder="Enter products..." className="w-96 p-2 outline-0" />
-          <Search className="ml-[-2rem] font-light cursor-pointer text-green-600" size={15} />
+          <Search className="ml-[-2rem] font-light cursor-pointer" size={15} />
         </div>
 
         {/* Desktop Icons */}
@@ -24,14 +24,14 @@ const Navbar: React.FC = () => {
           {/* Only desktop icon */}
           <div className="hidden md:flex">
             <Link to="/categories">
-              <LayoutGrid className="cursor-pointer text-green-600" />
+              <LayoutGrid className="cursor-pointer" size={20} />
             </Link>
           </div>
 
           {/* All Screen Icon */}
           <div>
             <Link to="/cart">
-              <ShoppingCart className="cursor-pointer text-green-600" />
+              <ShoppingCart className="cursor-pointer" size={20} />
             </Link>
           </div>
           {/* Hamburger for Mobile */}
