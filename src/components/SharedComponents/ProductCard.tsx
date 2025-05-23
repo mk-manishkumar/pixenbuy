@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { getAllProducts } from "@/api/fakeStoreApi";
 import type { Product } from "@/api/fakeStoreApi";
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-
 const PRODUCTS_PER_PAGE = 8;
+
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+
 
 const ProductCard: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -48,12 +53,11 @@ const ProductCard: React.FC = () => {
         {paginatedProducts.map((product) => (
           <div key={product.id} className="border rounded-lg p-4 shadow-md flex flex-col items-center text-center hover:shadow-xl transition duration-300">
             <img src={product.image} alt={product.title} className="h-40 object-contain mb-4" />
-            <Link to={`/product/${product.id}`}>
+            <Link to={`/product/${slugify(product.title)}`}>
               <h3 className="text-lg font-semibold mb-2 line-clamp-2 hover:underline cursor-pointer">{product.title}</h3>
             </Link>
             <p className="text-primary font-bold text-xl mb-1">${product.price}</p>
             <p className="text-sm text-gray-600 mb-4">Rating: ⭐ {product.rating.rate} / 5</p>
-            <Button className="cursor-pointer hover:bg-zinc-600 transition">ADD CART</Button>
           </div>
         ))}
       </div>
