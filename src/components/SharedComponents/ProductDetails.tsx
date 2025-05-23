@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "@/api/fakeStoreApi";
+import { getAllProducts } from "@/api/fakeStoreApi";
 import type { Product } from "@/api/fakeStoreApi";
 import Navbar from "@/components/SharedComponents/Navbar";
 import { Footer } from "@/components/SharedComponents/Footer";
 import { Button } from "@/components/ui/button";
 
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+
 const ProductDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -16,11 +22,14 @@ const ProductDetails: React.FC = () => {
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProductBySlug = async () => {
       try {
-        if (id) {
-          const data = await getProductById(Number(id));
-          setProduct(data);
+        if (slug) {
+          const products = await getAllProducts();
+          const matched = products.find((p) => slugify(p.title) === slug);
+          if (matched) {
+            setProduct(matched);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch product:", error);
@@ -29,8 +38,8 @@ const ProductDetails: React.FC = () => {
       }
     };
 
-    fetchProduct();
-  }, [id]);
+    fetchProductBySlug();
+  }, [slug]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -59,7 +68,7 @@ const ProductDetails: React.FC = () => {
 
                     {/* Quantity Selector */}
                     <div className="flex items-center mb-6 border rounded overflow-hidden w-max">
-                      <button onClick={decrement} className="cursor-pointer px-4 py-2 text-black-600 text-xl border-r ">
+                      <button onClick={decrement} className="cursor-pointer px-4 py-2 text-black-600 text-xl border-r">
                         -
                       </button>
                       <div className="px-6 py-2 text-black-600 text-lg border-r">{quantity}</div>

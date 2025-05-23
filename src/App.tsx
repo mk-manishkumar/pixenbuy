@@ -19,7 +19,7 @@ const appRouter = createBrowserRouter([
     ),
   },
   {
-    path: "/product/:id",
+    path: "/product/:slug",
     element: (
         <ProductDetails />
     ),

@@ -1,6 +1,14 @@
 import "flowbite";
+import { useEffect } from "react";
 
 export const Carousel = () => {
+  useEffect(() => {
+    // Dynamically import Flowbite after component is mounted
+    import("flowbite").then(() => {
+      // Optional: console.log("Flowbite carousel initialized");
+    });
+  }, []);
+
   return (
     <div>
       <div id="default-carousel" className="relative w-full" data-carousel="slide">
