@@ -3,7 +3,6 @@ import Navbar from "@/components/SharedComponents/Navbar";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Label } from "@/components/ui/label";
 
 type CartItem = {
   id: number;
@@ -36,37 +35,8 @@ const Cart: React.FC = () => {
       price: 150,
       quantity: 1,
     },
-    {
-      id: 4,
-      title: "Airpods",
-      brand: "Apple",
-      price: 150,
-      quantity: 1,
-    },
-    {
-      id: 5,
-      title: "Airpods",
-      brand: "Apple",
-      price: 150,
-      quantity: 1,
-    },
-    {
-      id: 7,
-      title: "Airpods",
-      brand: "Apple",
-      price: 150,
-      quantity: 1,
-    },
-    {
-      id: 8,
-      title: "Airpods",
-      brand: "Apple",
-      price: 150,
-      quantity: 1,
-    },
   ]);
 
-  const [shippingCost, setShippingCost] = useState<number>(10);
 
   const updateQuantity = (id: number, amount: number) => {
     setCartItems((prev) =>
@@ -85,15 +55,12 @@ const Cart: React.FC = () => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalCost = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
   return (
     <>
       <Navbar />
       <div className="bg-gray-50 py-10 px-4 sm:px-6 lg:px-16 min-h-screen">
         <div className="max-w-7xl mx-auto bg-white p-6 shadow-sm rounded-lg flex flex-col lg:flex-row gap-8">
-          {/* Left - Cart Items */}
+          {/*  Cart Items */}
           <div className="flex-1">
             <div className="flex md:flex-row flex-col items-center justify-between mb-8">
               <h2 className="text-2xl font-bold">Shopping Cart</h2>
@@ -129,41 +96,17 @@ const Cart: React.FC = () => {
               </div>
             ))}
 
-            <Link to="/" className="text-indigo-600 mt-6 inline-block">
-              ← Continue Shopping
-            </Link>
-          </div>
+            <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4">
+              {/* Hidden on small screens, visible from md and up */}
+              <Link to="/" className="hidden md:inline text-indigo-600 text-sm sm:text-base">
+                ← Continue Shopping
+              </Link>
 
-          {/* Right - Order Summary */}
-          <div className="lg:w-1/3 w-full border rounded-md p-6 bg-gray-50">
-            <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
-            <div className="flex justify-between mb-2">
-              <span>Items ({totalItems})</span>
-              <span className="font-medium">${totalCost.toFixed(2)}</span>
+              {/* Centered on small screens, right-aligned on larger */}
+              <Link to="/checkout" className="w-full md:w-auto">
+                <Button className="w-full md:w-auto bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded text-sm sm:text-base block mx-auto md:mx-0">Proceed to Checkout</Button>
+              </Link>
             </div>
-
-            <div className="mb-4">
-              <Label className="block mb-1 text-sm font-medium">Shipping</Label>
-              <select className="w-full border rounded px-3 py-2 text-sm cursor-pointer" onChange={(e) => setShippingCost(Number(e.target.value))}>
-                <option value={10}>Fast Shipping - $10.00</option>
-                <option value={0}>Free Shipping - $0.00</option>
-              </select>
-            </div>
-
-            <div className="mb-4">
-              <Label className="block mb-1 text-sm font-medium">Promo Code</Label>
-              <input type="text" placeholder="Enter your code" className="w-full border rounded px-3 py-2 text-sm mb-2" />
-              <Button className="w-full bg-red-500 hover:bg-red-600">APPLY</Button>
-            </div>
-
-            <hr className="my-4" />
-
-            <div className="flex justify-between text-lg font-semibold mb-4">
-              <span>Total Cost</span>
-              <span>${(totalCost + shippingCost).toFixed(2)}</span>
-            </div>
-
-            <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-lg">CHECKOUT</Button>
           </div>
         </div>
       </div>
