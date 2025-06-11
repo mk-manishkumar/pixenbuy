@@ -5,6 +5,8 @@ import type { Product } from "@/api/fakeStoreApi";
 import Navbar from "@/components/SharedComponents/Navbar";
 import { Footer } from "@/components/SharedComponents/Footer";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
+import { ToastContainer, toast } from "react-toastify";
 
 const slugify = (text: string) =>
   text
@@ -20,6 +22,31 @@ const ProductDetails: React.FC = () => {
 
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        brand: product.category,
+        quantity: quantity,
+      });
+
+      toast.success("Added to cart!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+      });
+    }
+  };
+  
 
   useEffect(() => {
     const fetchProductBySlug = async () => {
@@ -77,7 +104,9 @@ const ProductDetails: React.FC = () => {
                       </button>
                     </div>
 
-                    <Button className="cursor-pointer hover:bg-zinc-600">ADD CART</Button>
+                    <Button onClick={handleAddToCart} className="cursor-pointer hover:bg-zinc-600">
+                      ADD CART
+                    </Button>
                   </div>
                 </div>
               );
@@ -87,6 +116,8 @@ const ProductDetails: React.FC = () => {
           })()}
         </div>
       </main>
+
+      <ToastContainer />
 
       <Footer />
     </div>
