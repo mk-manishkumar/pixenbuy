@@ -104,7 +104,7 @@ const Cart: React.FC = () => {
 
               {/* Centered on small screens, right-aligned on larger */}
               <Link to="/checkout" className="w-full md:w-auto">
-                <Button className="w-full md:w-auto bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded text-sm sm:text-base block mx-auto md:mx-0">Proceed to Checkout</Button>
+                <Button className="w-full cursor-pointer md:w-auto bg-indigo-500 hover:bg-indigo-600  text-sm sm:text-base block mx-auto md:mx-0">Proceed to Checkout</Button>
               </Link>
             </div>
           </div>
