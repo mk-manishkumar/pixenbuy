@@ -7,12 +7,7 @@ import { Footer } from "@/components/SharedComponents/Footer";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { ToastContainer, toast } from "react-toastify";
-
-const slugify = (text: string) =>
-  text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "");
+import { slugify } from "@/utils/slugify";
 
 const ProductDetails: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();

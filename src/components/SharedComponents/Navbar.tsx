@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Search, LayoutGrid, ShoppingCart, Menu } from "lucide-react";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // Determine if search bar should be shown
+  const showSearchBar = location.pathname === "/" || location.pathname === "/categories";
 
   return (
     <nav className="w-full shadow-md bg-white">
@@ -13,27 +17,28 @@ const Navbar: React.FC = () => {
           <span className="text-red-600">PIXEN</span>BUY
         </Link>
 
-        {/* Desktop Search */}
-        <div className="hidden md:flex items-center">
-          <Input placeholder="Enter products..." className="w-96 p-2 outline-0" />
-          <Search className="ml-[-2rem] font-light cursor-pointer" size={15} />
-        </div>
+        {/* Desktop Search - conditionally rendered */}
+        {showSearchBar && (
+          <div className="hidden md:flex items-center">
+            <Input placeholder="Enter products..." className="w-96 p-2 outline-0" />
+            <Search className="ml-[-2rem] font-light cursor-pointer" size={15} />
+          </div>
+        )}
 
         {/* Desktop Icons */}
         <div className="flex justify-center gap-10">
-          {/* Only desktop icon */}
           <div className="hidden md:flex">
             <Link to="/categories">
               <LayoutGrid className="cursor-pointer" size={20} />
             </Link>
           </div>
 
-          {/* All Screen Icon */}
           <div>
             <Link to="/cart">
               <ShoppingCart className="cursor-pointer" size={20} />
             </Link>
           </div>
+
           {/* Hamburger for Mobile */}
           <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu" className="md:hidden">
             <Menu className="cursor-pointer text-green-600" />
@@ -44,7 +49,7 @@ const Navbar: React.FC = () => {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="flex flex-col gap-4 px-6 pb-4 md:hidden transition-all duration-300 ease-in-out transform">
-          <Input placeholder="Enter products..." className="w-full p-2 outline-0" />
+          {showSearchBar && <Input placeholder="Enter products..." className="w-full p-2 outline-0" />}
           <Link to="/categories" onClick={() => setMenuOpen(false)} className="text-sm text-gray-700 hover:text-green-600">
             Categories
           </Link>
