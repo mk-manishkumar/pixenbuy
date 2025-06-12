@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
+import { slugify } from "@/utils/slugify";
 
 const Cart: React.FC = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCart();
@@ -32,7 +33,9 @@ const Cart: React.FC = () => {
               {cartItems.map((item) => (
                 <div key={item.id} className="grid grid-cols-1 sm:grid-cols-4 items-center py-4 border-b text-sm">
                   <div className="col-span-2">
-                    <h3 className="font-semibold">{item.title}</h3>
+                    <Link to={`/product/${slugify(item.title)}`} className="font-semibold hover:underline">
+                      {item.title}
+                    </Link>
                     <p className="text-red-500">{item.brand}</p>
                     <button onClick={() => removeFromCart(item.id)} className="text-blue-500 mt-1 cursor-pointer">
                       Remove
@@ -69,6 +72,5 @@ const Cart: React.FC = () => {
     </div>
   );
 };
-
 
 export default Cart;
