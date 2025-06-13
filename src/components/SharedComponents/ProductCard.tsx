@@ -2,15 +2,9 @@ import React, { useEffect, useState } from "react";
 import { getAllProducts } from "@/api/fakeStoreApi";
 import type { Product } from "@/api/fakeStoreApi";
 import { Link } from "react-router-dom";
+import { slugify } from "@/utils/slugify";
 
 const PRODUCTS_PER_PAGE = 8;
-
-const slugify = (text: string) =>
-  text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "");
-
 
 const ProductCard: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
