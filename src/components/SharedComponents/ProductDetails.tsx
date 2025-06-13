@@ -5,7 +5,7 @@ import type { Product } from "@/api/fakeStoreApi";
 import Navbar from "@/components/SharedComponents/Navbar";
 import { Footer } from "@/components/SharedComponents/Footer";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/useCart";
 import { ToastContainer, toast } from "react-toastify";
 import { slugify } from "@/utils/slugify";
 

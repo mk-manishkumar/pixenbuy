@@ -3,7 +3,7 @@ import Navbar from "@/components/SharedComponents/Navbar";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/useCart";
 import { slugify } from "@/utils/slugify";
 
 const Cart: React.FC = () => {
@@ -55,7 +55,7 @@ const Cart: React.FC = () => {
               ))}
 
               <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4">
-                <Link to="/" className="hidden md:inline text-indigo-600 text-sm sm:text-base">
+                <Link to="/categories" className="hidden md:inline text-indigo-600 text-sm sm:text-base">
                   ← Continue Shopping
                 </Link>
                 {cartItems.length > 0 && (

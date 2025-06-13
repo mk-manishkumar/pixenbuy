@@ -3,40 +3,68 @@ import Navbar from "@/components/SharedComponents/Navbar";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useCart } from "@/context/CartContext";
+import { Input } from "@/components/ui/input";
+import { useCart } from "@/context/useCart";
+import { useNavigate } from "react-router-dom";
 
 const Checkout: React.FC = () => {
-  const { cartItems } = useCart();
+  const navigate = useNavigate();
+
+  const { cartItems, updateQuantity, clearCart } = useCart();
   const [shippingCost, setShippingCost] = useState(10);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+
+  const formValid = name && email && phone && address;
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalCost = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
+  const handlePlaceOrder = () => {
+    cartItems.forEach((item) => updateQuantity(item.id, -item.quantity));
+    setShowPopup(true);
+  };
+
+  const goToHome = () => {
+    setShowPopup(false);
+    setName("");
+    setEmail("");
+    setPhone("");
+    setAddress("");
+    clearCart();
+    navigate("/");
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
       <Navbar />
 
-      <div className="flex-grow bg-gray-50 py-10 px-4 sm:px-6 lg:px-16">
+      {/* Overlay Blur when Popup is active */}
+      <div className={`flex-grow bg-gray-50 py-10 px-4 sm:px-6 lg:px-16 transition-all duration-300 ${showPopup ? "blur-sm pointer-events-none" : ""}`}>
         <div className="max-w-7xl mx-auto bg-white p-6 shadow-sm rounded-lg flex flex-col lg:flex-row gap-8">
           {/* Left - Customer Details */}
           <div className="flex-1">
             <h2 className="text-2xl font-bold mb-6">Customer Details</h2>
             <form className="grid grid-cols-1 gap-4">
               <div>
-                <Label className="block mb-1">Name</Label>
-                <input type="text" className="w-full border px-3 py-2 rounded text-sm" placeholder="Enter your name" />
+                <Label className="block mb-2">Name</Label>
+                <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div>
-                <Label className="block mb-1">Email</Label>
-                <input type="email" className="w-full border px-3 py-2 rounded text-sm" placeholder="you@example.com" />
+                <Label className="block mb-2">Email</Label>
+                <Input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div>
-                <Label className="block mb-1">Mobile Number</Label>
-                <input type="tel" className="w-full border px-3 py-2 rounded text-sm" placeholder="+1 234 567 8901" />
+                <Label className="block mb-2">Mobile Number</Label>
+                <Input type="tel" placeholder="+1 234 567 8901" value={phone} onChange={(e) => setPhone(e.target.value)} />
               </div>
               <div>
-                <Label className="block mb-1">Address</Label>
-                <textarea rows={4} className="w-full border px-3 py-2 rounded text-sm" placeholder="123 Street, City, Country" />
+                <Label className="block mb-2">Address</Label>
+                <textarea rows={5} className="w-full border px-3 py-2 rounded text-sm resize-none" placeholder="123 Street, City, Country" value={address} onChange={(e) => setAddress(e.target.value)} />
               </div>
             </form>
           </div>
@@ -60,8 +88,8 @@ const Checkout: React.FC = () => {
 
             <div className="mb-4">
               <Label className="block mb-1 text-sm font-medium">Promo Code</Label>
-              <input type="text" placeholder="Enter your code" className="w-full border rounded px-3 py-2 text-sm mb-2" />
-              <Button className="w-full bg-red-500 hover:bg-red-600 text-white text-sm">APPLY</Button>
+              <Input type="text" placeholder="Enter your code" />
+              <Button className="w-full bg-red-500 hover:bg-red-600 cursor-pointer mt-2 select-none">APPLY</Button>
             </div>
 
             <hr className="my-4" />
@@ -71,12 +99,27 @@ const Checkout: React.FC = () => {
               <span>${(totalCost + shippingCost).toFixed(2)}</span>
             </div>
 
-            <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-lg">PLACE ORDER</Button>
+            <Button disabled={!formValid} onClick={handlePlaceOrder} className={`w-full text-lg cursor-pointer select-none ${formValid ? "bg-indigo-500 hover:bg-indigo-600" : "bg-indigo-500 cursor-not-allowed"}`}>
+              PLACE ORDER
+            </Button>
           </div>
         </div>
       </div>
 
       <Footer />
+
+      {/* Popup Modal */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white w-[90%] max-w-md p-6 rounded-lg shadow-lg text-center">
+            <h2 className="text-xl font-bold mb-4">Order Placed Successfully!</h2>
+            <p className="text-gray-600 mb-6">Thank you for your purchase. Your order has been received.</p>
+            <Button onClick={goToHome} className="bg-green-600 hover:bg-green-700 cursor-pointer px-4 py-2 rounded">
+              Go to Home
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
