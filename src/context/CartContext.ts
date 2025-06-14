@@ -14,6 +14,9 @@ export type CartContextType = {
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, amount: number) => void;
   clearCart: () => void;
+  canAccessCheckout: boolean;
+  allowCheckout: () => void;
+  resetCheckoutAccess: () => void;
 };
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);

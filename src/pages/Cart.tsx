@@ -2,12 +2,19 @@ import { Footer } from "@/components/SharedComponents/Footer";
 import Navbar from "@/components/SharedComponents/Navbar";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/useCart";
 import { slugify } from "@/utils/slugify";
 
 const Cart: React.FC = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCart();
+  const { allowCheckout } = useCart();
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    allowCheckout();
+    navigate("/checkout");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -59,9 +66,9 @@ const Cart: React.FC = () => {
                   ← Continue Shopping
                 </Link>
                 {cartItems.length > 0 && (
-                  <Link to="/checkout" className="w-full md:w-auto">
-                    <Button className="w-full cursor-pointer md:w-auto bg-indigo-500 hover:bg-indigo-600 text-sm sm:text-base block mx-auto md:mx-0">Proceed to Checkout</Button>
-                  </Link>
+                  <Button onClick={handleCheckout} className="w-full cursor-pointer md:w-auto bg-indigo-500 hover:bg-indigo-600 text-sm sm:text-base block mx-auto md:mx-0">
+                    Proceed to Checkout
+                  </Button>
                 )}
               </div>
             </div>

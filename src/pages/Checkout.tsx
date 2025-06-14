@@ -1,6 +1,6 @@
 import { Footer } from "@/components/SharedComponents/Footer";
 import Navbar from "@/components/SharedComponents/Navbar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
 
-  const { cartItems, updateQuantity, clearCart } = useCart();
+  const { cartItems, updateQuantity, clearCart, canAccessCheckout, resetCheckoutAccess } = useCart();
   const [shippingCost, setShippingCost] = useState(10);
 
   const [name, setName] = useState("");
@@ -36,8 +36,15 @@ const Checkout: React.FC = () => {
     setPhone("");
     setAddress("");
     clearCart();
+    resetCheckoutAccess();
     navigate("/");
   };
+
+  useEffect(() => {
+    if (!canAccessCheckout) {
+      navigate("/");
+    }
+  }, [canAccessCheckout, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col relative">
@@ -113,7 +120,9 @@ const Checkout: React.FC = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white w-[90%] max-w-md p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-xl font-bold mb-4">Order Placed Successfully!</h2>
-            <p className="text-gray-600 mb-6">Thank you for your purchase. Your order has been received.</p>
+            <p className="text-gray-600 mb-6">
+              Thank you {name} for your purchase. Your order has been received. Please pay ${(totalCost + shippingCost).toFixed(2)} to the delivery person.
+            </p>
             <Button onClick={goToHome} className="bg-green-600 hover:bg-green-700 cursor-pointer px-4 py-2 rounded">
               Go to Home
             </Button>
