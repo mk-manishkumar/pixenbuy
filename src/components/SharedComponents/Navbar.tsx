@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Search, LayoutGrid, ShoppingCart, Menu } from "lucide-react";
+import { useCart } from "@/context/useCart";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const { cartItems } = useCart();
+  const uniqueItemsCount = cartItems.length;
 
   // Determine if search bar should be shown
   const showSearchBar = location.pathname === "/" || location.pathname === "/categories";
@@ -33,9 +36,10 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          <div>
-            <Link to="/cart">
+          <div className="flex items-center">
+            <Link to="/cart" className="relative">
               <ShoppingCart className="cursor-pointer" size={20} />
+              {uniqueItemsCount > 0 && <span className="absolute -top-2 -right-2 w-[20px] h-[20px] bg-[#e21717] rounded-full flex justify-center items-center text-white text-xs">{uniqueItemsCount}</span>}
             </Link>
           </div>
 
