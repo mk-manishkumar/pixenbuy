@@ -18,6 +18,7 @@ const Checkout: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [finalCost, setFinalCost] = useState(0);
 
   const formValid = name && email && phone && address;
 
@@ -25,8 +26,10 @@ const Checkout: React.FC = () => {
   const totalCost = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
   const handlePlaceOrder = () => {
-    cartItems.forEach((item) => updateQuantity(item.id, -item.quantity));
+    const currentTotal = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    setFinalCost(currentTotal + shippingCost);
     setShowPopup(true);
+    cartItems.forEach((item) => updateQuantity(item.id, -item.quantity));
   };
 
   const goToHome = () => {
@@ -121,7 +124,7 @@ const Checkout: React.FC = () => {
           <div className="bg-white w-[90%] max-w-md p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-xl font-bold mb-4">Order Placed Successfully!</h2>
             <p className="text-gray-600 mb-6">
-              Thank you {name} for your purchase. Your order has been received. Please pay ${(totalCost + shippingCost).toFixed(2)} to the delivery person.
+              Thank you {name} for your purchase. Your order has been received. Please pay ${finalCost.toFixed(2)} to the delivery person.
             </p>
             <Button onClick={goToHome} className="bg-green-600 hover:bg-green-700 cursor-pointer px-4 py-2 rounded">
               Go to Home
