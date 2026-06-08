@@ -3,18 +3,50 @@ import Navbar from "@/components/SharedComponents/Navbar";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { useCart } from "@/context/useCart";
+import { useAuth } from "@clerk/clerk-react";
+import { useCartQuery } from "@/hooks/useCartQuery";
+import { useUpdateCartItem, useRemoveFromCart } from "@/hooks/useCartMutations";
 import { slugify } from "@/utils/slugify";
 
 const Cart: React.FC = () => {
-  const { cartItems, updateQuantity, removeFromCart } = useCart();
-  const { allowCheckout } = useCart();
   const navigate = useNavigate();
+  const { isSignedIn } = useAuth();
+  const { data: cart, isLoading } = useCartQuery();
+  const { mutate: updateItem } = useUpdateCartItem();
+  const { mutate: removeItem } = useRemoveFromCart();
+
+  const cartItems = cart?.items ?? [];
+
+  const handleQuantityChange = (productId: number, currentQty: number, delta: number) => {
+    const newQty = currentQty + delta;
+    if (newQty < 1) return;
+    updateItem({ productId, quantity: newQty });
+  };
+
+  const handleRemove = (productId: number) => {
+    removeItem(productId);
+  };
 
   const handleCheckout = () => {
-    allowCheckout();
     navigate("/checkout");
   };
+
+  if (!isSignedIn) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-lg text-gray-600 mb-4">Please sign in to view your cart</p>
+            <Button onClick={() => navigate("/sign-in")} className="bg-indigo-500 hover:bg-indigo-600 cursor-pointer">
+              Sign In
+            </Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -27,7 +59,7 @@ const Cart: React.FC = () => {
               <div className="flex md:flex-row flex-col items-center justify-between mb-8">
                 <h2 className="text-2xl font-bold">Shopping Cart</h2>
                 <p className="text-xl font-light md:text-2xl md:font-bold">
-                  {cartItems.length} {cartItems.length > 1 ? "items" : "item"}
+                  {isLoading ? "..." : `${cartItems.length} ${cartItems.length > 1 ? "items" : "item"}`}
                 </p>
               </div>
 
@@ -38,22 +70,25 @@ const Cart: React.FC = () => {
               </div>
 
               {cartItems.map((item) => (
-                <div key={item.id} className="grid grid-cols-1 sm:grid-cols-4 items-center py-4 border-b text-sm">
-                  <div className="col-span-2">
-                    <Link to={`/product/${slugify(item.title)}`} className="font-semibold hover:underline">
-                      {item.title}
-                    </Link>
-                    <p className="text-red-500">{item.brand}</p>
-                    <button onClick={() => removeFromCart(item.id)} className="text-blue-500 mt-1 cursor-pointer">
-                      Remove
-                    </button>
+                <div key={item.productId} className="grid grid-cols-1 sm:grid-cols-4 items-center py-4 border-b text-sm">
+                  <div className="col-span-2 flex items-center gap-4">
+                    {item.image && <img src={item.image} alt={item.title} className="w-16 h-16 object-contain" />}
+                    <div>
+                      <Link to={`/product/${slugify(item.title)}`} className="font-semibold hover:underline">
+                        {item.title}
+                      </Link>
+                      <p className="text-red-500">{item.brand}</p>
+                      <button onClick={() => handleRemove(item.productId)} className="text-blue-500 mt-1 cursor-pointer">
+                        Remove
+                      </button>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                    <button onClick={() => updateQuantity(item.id, -1)} className="border px-2 cursor-pointer">
+                    <button onClick={() => handleQuantityChange(item.productId, item.quantity, -1)} className="border px-2 cursor-pointer">
                       -
                     </button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, 1)} className="border px-2 cursor-pointer">
+                    <button onClick={() => handleQuantityChange(item.productId, item.quantity, 1)} className="border px-2 cursor-pointer">
                       +
                     </button>
                   </div>

@@ -15,7 +15,7 @@ const addItem = asyncHandler(async (req, res) => {
 
 // PATCH /api/v1/cart/items/:productId
 const updateItem = asyncHandler(async (req, res) => {
-  const productId = parseInt(req.params.productId);
+  const productId = Number.parseInt(req.params.productId);
   const { quantity } = req.body;
   const cart = await cartService.updateItem(req.user._id, productId, quantity);
   res.json(cart);
@@ -23,7 +23,7 @@ const updateItem = asyncHandler(async (req, res) => {
 
 // DELETE /api/v1/cart/items/:productId
 const removeItem = asyncHandler(async (req, res) => {
-  const productId = parseInt(req.params.productId);
+  const productId = Number.parseInt(req.params.productId);
   const cart = await cartService.removeItem(req.user._id, productId);
   res.json(cart);
 });
