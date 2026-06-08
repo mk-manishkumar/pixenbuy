@@ -9,6 +9,9 @@ import cartRoutes from "./src/routes/cart.routes.js";
 
 const app = express();
 
+// hide Express version from response headers
+app.disable("x-powered-by");
+
 // Connect to MongoDB
 connectDB();
 

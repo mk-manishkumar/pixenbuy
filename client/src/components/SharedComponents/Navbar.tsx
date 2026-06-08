@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import { Input } from "@/components/ui/input";
-import { Search, LayoutGrid, ShoppingCart, Menu } from "lucide-react";
-import { useCart } from "@/context/useCart";
+import { Search, LayoutGrid, ShoppingCart, Menu, LogIn } from "lucide-react";
+import { useCartQuery } from "@/hooks/useCartQuery";
 import { getAllProducts } from "@/api/fakeStoreApi";
 import type { Product } from "@/api/fakeStoreApi";
 import { slugify } from "@/utils/slugify";
@@ -11,8 +12,9 @@ const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { cartItems } = useCart();
-  const uniqueItemsCount = cartItems.length;
+
+  const { data: cart } = useCartQuery();
+  const uniqueItemsCount = cart?.items.length ?? 0;
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Product[]>([]);
@@ -37,7 +39,7 @@ const Navbar: React.FC = () => {
         setShowDropdown(false);
         setResults([]);
       }
-    }, 300); 
+    }, 300);
 
     return () => clearTimeout(delayDebounce);
   }, [query]);
@@ -83,7 +85,7 @@ const Navbar: React.FC = () => {
         )}
 
         {/* Desktop Icons */}
-        <div className="flex justify-center gap-10">
+        <div className="flex justify-center gap-6 items-center">
           <div className="hidden md:flex">
             <Link to="/categories">
               <LayoutGrid className="cursor-pointer" size={20} />
@@ -96,6 +98,17 @@ const Navbar: React.FC = () => {
               {uniqueItemsCount > 0 && <span className="absolute -top-2 -right-2 w-[20px] h-[20px] bg-[#e21717] rounded-full flex justify-center items-center text-white text-xs">{uniqueItemsCount}</span>}
             </Link>
           </div>
+
+          {/* Auth: UserButton when signed in, Sign In link when signed out */}
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
+          <SignedOut>
+            <Link to="/sign-in" className="flex items-center gap-1 text-sm text-gray-700 hover:text-black">
+              <LogIn size={18} />
+              <span className="hidden md:inline">Sign In</span>
+            </Link>
+          </SignedOut>
 
           {/* Mobile Hamburger */}
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">

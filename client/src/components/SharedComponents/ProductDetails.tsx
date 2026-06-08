@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 import { getAllProducts } from "@/api/fakeStoreApi";
 import type { Product } from "@/api/fakeStoreApi";
 import Navbar from "@/components/SharedComponents/Navbar";
 import { Footer } from "@/components/SharedComponents/Footer";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/context/useCart";
+import { useAddToCart } from "@/hooks/useCartMutations";
 import { ToastContainer, toast } from "react-toastify";
 import { slugify } from "@/utils/slugify";
+import { addToCartSchema } from "@/utils/schemas";
 
 const ProductDetails: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { isSignedIn } = useAuth();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -18,30 +22,60 @@ const ProductDetails: React.FC = () => {
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
-  const { addToCart } = useCart();
+  const { mutate: addToCart, isPending } = useAddToCart();
 
   const handleAddToCart = () => {
+    if (!isSignedIn) {
+      toast.info("Please sign in to add items to cart", {
+        position: "top-right",
+        autoClose: 2000,
+        theme: "colored",
+      });
+      navigate("/sign-in");
+      return;
+    }
+
     if (product) {
-      addToCart({
-        id: product.id,
+      const result = addToCartSchema.safeParse({
+        productId: product.id,
         title: product.title,
         price: product.price,
         brand: product.category,
         quantity: quantity,
+        image: product.image,
       });
 
-      toast.success("Added to cart!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
+      if (!result.success) {
+        toast.error(result.error.issues[0].message, {
+          position: "top-right",
+          autoClose: 2000,
+          theme: "colored",
+        });
+        return;
+      }
+
+      addToCart(result.data, {
+        onSuccess: () => {
+          toast.success("Added to cart!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+          });
+        },
+        onError: () => {
+          toast.error("Failed to add to cart", {
+            position: "top-right",
+            autoClose: 2000,
+            theme: "colored",
+          });
+        },
       });
     }
   };
-  
 
   useEffect(() => {
     const fetchProductBySlug = async () => {
@@ -99,8 +133,8 @@ const ProductDetails: React.FC = () => {
                       </button>
                     </div>
 
-                    <Button onClick={handleAddToCart} className="cursor-pointer hover:bg-zinc-600">
-                      ADD CART
+                    <Button onClick={handleAddToCart} disabled={isPending} className="cursor-pointer hover:bg-zinc-600">
+                      {isPending ? "Adding..." : "ADD CART"}
                     </Button>
                   </div>
                 </div>

@@ -1,53 +1,72 @@
 import { Footer } from "@/components/SharedComponents/Footer";
 import Navbar from "@/components/SharedComponents/Navbar";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useCart } from "@/context/useCart";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
+import { useCartQuery } from "@/hooks/useCartQuery";
+import { useClearCart } from "@/hooks/useCartMutations";
+import { useUserQuery } from "@/hooks/useUserQuery";
+import { checkoutFormSchema } from "@/utils/schemas";
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
+  const { isSignedIn } = useAuth();
+  const { data: cart } = useCartQuery();
+  const { data: user } = useUserQuery();
+  const { mutate: clearCart } = useClearCart();
 
-  const { cartItems, updateQuantity, clearCart, canAccessCheckout, resetCheckoutAccess } = useCart();
   const [shippingCost, setShippingCost] = useState(10);
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [phone, setPhone] = useState(user?.phone || "");
+  const [address, setAddress] = useState(user?.address || "");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPopup, setShowPopup] = useState(false);
   const [finalCost, setFinalCost] = useState(0);
 
-  const formValid = name && email && phone && address;
+  const cartItems = cart?.items ?? [];
+  const totalItems = cart?.totalItems ?? 0;
+  const totalCost = cart?.totalPrice ?? 0;
 
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalCost = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  // Redirect if not signed in or cart is empty
+  if (!isSignedIn) {
+    navigate("/sign-in");
+    return null;
+  }
+
+  if (cartItems.length === 0 && !showPopup) {
+    navigate("/cart");
+    return null;
+  }
 
   const handlePlaceOrder = () => {
-    const currentTotal = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
-    setFinalCost(currentTotal + shippingCost);
+    const result = checkoutFormSchema.safeParse({ name, email, phone, address });
+
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const field = String(issue.path[0]);
+        if (!fieldErrors[field]) {
+          fieldErrors[field] = issue.message;
+        }
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
+    setFinalCost(totalCost + shippingCost);
     setShowPopup(true);
-    cartItems.forEach((item) => updateQuantity(item.id, -item.quantity));
   };
 
   const goToHome = () => {
-    setShowPopup(false);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setAddress("");
     clearCart();
-    resetCheckoutAccess();
+    setShowPopup(false);
     navigate("/");
   };
-
-  useEffect(() => {
-    if (!canAccessCheckout) {
-      navigate("/");
-    }
-  }, [canAccessCheckout, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col relative">
@@ -63,18 +82,22 @@ const Checkout: React.FC = () => {
               <div>
                 <Label className="block mb-2">Name</Label>
                 <Input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
+                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
               </div>
               <div>
                 <Label className="block mb-2">Email</Label>
                 <Input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
               </div>
               <div>
                 <Label className="block mb-2">Mobile Number</Label>
                 <Input type="tel" placeholder="+1 234 567 8901" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
               </div>
               <div>
                 <Label className="block mb-2">Address</Label>
                 <textarea rows={5} className="w-full border px-3 py-2 rounded text-sm resize-none" placeholder="123 Street, City, Country" value={address} onChange={(e) => setAddress(e.target.value)} />
+                {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
               </div>
             </form>
           </div>
@@ -109,7 +132,7 @@ const Checkout: React.FC = () => {
               <span>${(totalCost + shippingCost).toFixed(2)}</span>
             </div>
 
-            <Button disabled={!formValid} onClick={handlePlaceOrder} className={`w-full text-lg cursor-pointer select-none ${formValid ? "bg-indigo-500 hover:bg-indigo-600" : "bg-indigo-500 cursor-not-allowed"}`}>
+            <Button onClick={handlePlaceOrder} className="w-full text-lg cursor-pointer select-none bg-indigo-500 hover:bg-indigo-600">
               PLACE ORDER
             </Button>
           </div>
