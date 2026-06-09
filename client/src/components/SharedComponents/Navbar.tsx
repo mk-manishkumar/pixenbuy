@@ -70,12 +70,7 @@ const Navbar: React.FC = () => {
             {showDropdown && results.length > 0 && (
               <ul className="absolute top-12 w-full bg-white border rounded-md shadow-md z-50 max-h-60 overflow-y-auto">
                 {results.map((item) => (
-                  <button
-                    key={item.id}
-                    className="w-full text-left px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm"
-                    onClick={() => handleSelect(item)}
-                    type="button"
-                  >
+                  <button key={item.id} className="w-full text-left px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm" onClick={() => handleSelect(item)} type="button">
                     {item.title}
                   </button>
                 ))}
@@ -101,7 +96,7 @@ const Navbar: React.FC = () => {
 
           {/* Auth: UserButton when signed in, Sign In link when signed out */}
           <SignedIn>
-            <UserButton afterSignOutUrl="/" />
+            <UserButton />
           </SignedIn>
           <SignedOut>
             <Link to="/sign-in" className="flex items-center gap-1 text-sm text-gray-700 hover:text-black">
