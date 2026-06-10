@@ -1,5 +1,6 @@
 import User from "../models/User.model.js";
 import Cart from "../models/Cart.model.js";
+import Order from "../models/Order.model.js";
 import { ApiError } from "../utils/errorHandler.js";
 
 /**
@@ -17,10 +18,61 @@ const createUser = async (clerkId, { email, name }) => {
       clerkId,
       email,
       name: name || "",
+      role: "user",
     });
     return { user, created: true };
   } catch (error) {
     // Handle race condition on duplicate key
+    if (error.code === 11000) {
+      user = await User.findOne({ clerkId });
+      return { user, created: false };
+    }
+    throw error;
+  }
+};
+
+/**
+ * Create an admin account.
+ * Requires matching ADMIN_SECRET_KEY and ADMIN_EMAIL env vars.
+ * Only one admin is allowed on the platform.
+ */
+const createAdmin = async (clerkId, { email, name, secretKey }) => {
+  // Validate secret key
+  if (!process.env.ADMIN_SECRET_KEY || secretKey !== process.env.ADMIN_SECRET_KEY) {
+    throw new ApiError(403, "Invalid admin secret key");
+  }
+
+  // Validate admin email
+  if (!process.env.ADMIN_EMAIL || email !== process.env.ADMIN_EMAIL) {
+    throw new ApiError(403, "This email is not authorized for admin access");
+  }
+
+  // Check if an admin already exists
+  const existingAdmin = await User.findOne({ role: "admin" });
+  if (existingAdmin) {
+    throw new ApiError(409, "An admin account already exists");
+  }
+
+  // Check if this clerk user already has an account
+  let user = await User.findOne({ clerkId });
+  if (user) {
+    // If user exists but is not admin, upgrade role
+    if (user.role !== "admin") {
+      user.role = "admin";
+      await user.save();
+    }
+    return { user, created: false };
+  }
+
+  try {
+    user = await User.create({
+      clerkId,
+      email,
+      name: name || "",
+      role: "admin",
+    });
+    return { user, created: true };
+  } catch (error) {
     if (error.code === 11000) {
       user = await User.findOne({ clerkId });
       return { user, created: false };
@@ -55,11 +107,12 @@ const updateUser = async (userId, updates) => {
 };
 
 /**
- * Delete a user and their associated cart.
+ * Delete a user and their associated cart and orders.
  */
 const deleteUser = async (userId) => {
   await Cart.findOneAndDelete({ userId });
+  await Order.deleteMany({ userId });
   await User.findByIdAndDelete(userId);
 };
 
-export { createUser, updateUser, deleteUser };
+export { createUser, createAdmin, updateUser, deleteUser };

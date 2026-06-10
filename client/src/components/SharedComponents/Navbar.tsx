@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import { Input } from "@/components/ui/input";
-import { Search, LayoutGrid, ShoppingCart, Menu, LogIn } from "lucide-react";
+import { Search, LayoutGrid, ShoppingCart, Menu, LogIn, User, LayoutDashboard } from "lucide-react";
 import { useCartQuery } from "@/hooks/useCartQuery";
+import { useUserQuery } from "@/hooks/useUserQuery";
 import { getAllProducts } from "@/api/fakeStoreApi";
 import type { Product } from "@/api/fakeStoreApi";
 import { slugify } from "@/utils/slugify";
@@ -14,6 +15,8 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   const { data: cart } = useCartQuery();
+  const { data: user } = useUserQuery();
+  const isAdmin = user?.role === "admin";
   const uniqueItemsCount = cart?.items.length ?? 0;
 
   const [query, setQuery] = useState("");
@@ -70,7 +73,12 @@ const Navbar: React.FC = () => {
             {showDropdown && results.length > 0 && (
               <ul className="absolute top-12 w-full bg-white border rounded-md shadow-md z-50 max-h-60 overflow-y-auto">
                 {results.map((item) => (
-                  <button key={item.id} className="w-full text-left px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm" onClick={() => handleSelect(item)} type="button">
+                  <button
+                    key={item.id}
+                    className="w-full text-left px-4 py-2 cursor-pointer hover:bg-gray-100 text-sm"
+                    onClick={() => handleSelect(item)}
+                    type="button"
+                  >
                     {item.title}
                   </button>
                 ))}
@@ -87,16 +95,41 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          <div className="flex items-center">
-            <Link to="/cart" className="relative">
-              <ShoppingCart className="cursor-pointer" size={20} />
-              {uniqueItemsCount > 0 && <span className="absolute -top-2 -right-2 w-[20px] h-[20px] bg-[#e21717] rounded-full flex justify-center items-center text-white text-xs">{uniqueItemsCount}</span>}
-            </Link>
-          </div>
-
-          {/* Auth: UserButton when signed in, Sign In link when signed out */}
+          {/* Cart icon — hidden for admin */}
           <SignedIn>
-            <UserButton />
+            {!isAdmin && (
+              <div className="flex items-center">
+                <Link to="/cart" className="relative">
+                  <ShoppingCart className="cursor-pointer" size={20} />
+                  {uniqueItemsCount > 0 && <span className="absolute -top-2 -right-2 w-[20px] h-[20px] bg-[#e21717] rounded-full flex justify-center items-center text-white text-xs">{uniqueItemsCount}</span>}
+                </Link>
+              </div>
+            )}
+          </SignedIn>
+          <SignedOut>
+            <div className="flex items-center">
+              <Link to="/cart" className="relative">
+                <ShoppingCart className="cursor-pointer" size={20} />
+              </Link>
+            </div>
+          </SignedOut>
+
+          {/* Auth section */}
+          <SignedIn>
+            <div className="hidden md:flex items-center gap-4">
+              {isAdmin ? (
+                <Link to="/admin/dashboard" className="flex items-center gap-1 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
+                  <LayoutDashboard size={18} />
+                  <span>Dashboard</span>
+                </Link>
+              ) : (
+                <Link to="/profile" className="flex items-center gap-1 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
+                  <User size={18} />
+                  <span>Profile</span>
+                </Link>
+              )}
+            </div>
+            <UserButton afterSignOutUrl="/" />
           </SignedIn>
           <SignedOut>
             <Link to="/sign-in" className="flex items-center gap-1 text-sm text-gray-700 hover:text-black">
@@ -119,6 +152,17 @@ const Navbar: React.FC = () => {
           <Link to="/categories" onClick={() => setMenuOpen(false)} className="text-sm text-gray-700 hover:text-green-600">
             Categories
           </Link>
+          <SignedIn>
+            {isAdmin ? (
+              <Link to="/admin/dashboard" onClick={() => setMenuOpen(false)} className="text-sm text-gray-700 hover:text-indigo-600">
+                Dashboard
+              </Link>
+            ) : (
+              <Link to="/profile" onClick={() => setMenuOpen(false)} className="text-sm text-gray-700 hover:text-indigo-600">
+                Profile
+              </Link>
+            )}
+          </SignedIn>
         </div>
       )}
     </nav>
