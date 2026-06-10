@@ -24,4 +24,29 @@ const resolveUser = async (req, res, next) => {
   }
 };
 
-export { resolveUser };
+/**
+ * Middleware that restricts access to admin users only.
+ * Must be used AFTER resolveUser.
+ */
+const requireAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
+};
+
+/**
+ * Middleware that restricts access to regular users only.
+ * Used to block admin from purchasing.
+ * Must be used AFTER resolveUser.
+ */
+const requireUserRole = (req, res, next) => {
+  if (req.user.role !== "user") {
+    return res
+      .status(403)
+      .json({ error: "This action is only available for regular users" });
+  }
+  next();
+};
+
+export { resolveUser, requireAdmin, requireUserRole };

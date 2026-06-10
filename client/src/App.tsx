@@ -9,6 +9,9 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminSignUp from "./pages/AdminSignUp";
 import ProductDetails from "./components/SharedComponents/ProductDetails";
 import ErrorPage from "./pages/ErrorPage";
 
@@ -39,12 +42,26 @@ const appRouter = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: "/profile",
+    element: <Profile />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/sign-in",
     element: <SignIn />,
   },
   {
     path: "/sign-up",
     element: <SignUp />,
+  },
+  {
+    path: "/admin/dashboard",
+    element: <AdminDashboard />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/admin/sign-up",
+    element: <AdminSignUp />,
   },
   {
     path: "*",

@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { requireAuth } from "@clerk/express";
-import { resolveUser } from "../middleware/auth.middleware.js";
+import { resolveUser, requireUserRole } from "../middleware/auth.middleware.js";
 import * as cartController from "../controllers/cart.controller.js";
 
 const router = Router();
 
-// All cart routes require auth + resolved user
-router.use(requireAuth(), resolveUser);
+// All cart routes require auth + resolved user + user role (blocks admin)
+router.use(requireAuth(), resolveUser, requireUserRole);
 
 router.get("/", cartController.getCart);
 router.post("/items", cartController.addItem);

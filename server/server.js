@@ -6,6 +6,8 @@ import connectDB from "./src/config/db.js";
 import { errorHandler } from "./src/utils/errorHandler.js";
 import userRoutes from "./src/routes/user.routes.js";
 import cartRoutes from "./src/routes/cart.routes.js";
+import orderRoutes from "./src/routes/order.routes.js";
+import adminRoutes from "./src/routes/admin.routes.js";
 
 const app = express();
 
@@ -28,6 +30,8 @@ app.use(clerkMiddleware());
 // Routes
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 // Health check
 app.get("/", (_req, res) => {
