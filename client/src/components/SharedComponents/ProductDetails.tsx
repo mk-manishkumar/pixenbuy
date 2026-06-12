@@ -10,6 +10,7 @@ import { useAddToCart } from "@/hooks/useCartMutations";
 import { ToastContainer, toast } from "react-toastify";
 import { slugify } from "@/utils/slugify";
 import { addToCartSchema } from "@/utils/schemas";
+import { useUserQuery } from "@/hooks/useUserQuery";
 
 const ProductDetails: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -18,6 +19,8 @@ const ProductDetails: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const { data: user } = useUserQuery();
+  const isAdmin = user?.role === "admin";
 
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -133,9 +136,11 @@ const ProductDetails: React.FC = () => {
                       </button>
                     </div>
 
-                    <Button onClick={handleAddToCart} disabled={isPending} className="cursor-pointer hover:bg-zinc-600">
-                      {isPending ? "Adding..." : "ADD CART"}
-                    </Button>
+                    {!isAdmin && (
+                      <Button onClick={handleAddToCart} disabled={isPending} className="cursor-pointer hover:bg-zinc-600">
+                        {isPending ? "Adding..." : "ADD CART"}
+                      </Button>
+                    )}
                   </div>
                 </div>
               );

@@ -10,6 +10,7 @@ import { useCartQuery } from "@/hooks/useCartQuery";
 import { useClearCart } from "@/hooks/useCartMutations";
 import { useUserQuery } from "@/hooks/useUserQuery";
 import { checkoutFormSchema } from "@/utils/schemas";
+import { usePlaceOrder } from "@/hooks/useOrderQuery";
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Checkout: React.FC = () => {
   const { data: cart } = useCartQuery();
   const { data: user } = useUserQuery();
   const { mutate: clearCart } = useClearCart();
+  const { mutate: placeOrder, isPending: isPlacingOrder } = usePlaceOrder();
 
   const [shippingCost, setShippingCost] = useState(10);
   const [name, setName] = useState(user?.name || "");
@@ -58,8 +60,21 @@ const Checkout: React.FC = () => {
     }
 
     setErrors({});
-    setFinalCost(totalCost + shippingCost);
-    setShowPopup(true);
+    
+    // Proceed to place order via backend API
+    placeOrder(
+      { shippingCost, shippingAddress: address },
+      {
+        onSuccess: () => {
+          setFinalCost(totalCost + shippingCost);
+          setShowPopup(true);
+        },
+        onError: (err) => {
+          console.error("Failed to place order:", err);
+          // Could show toast error here
+        }
+      }
+    );
   };
 
   const goToHome = () => {
@@ -132,8 +147,8 @@ const Checkout: React.FC = () => {
               <span>${(totalCost + shippingCost).toFixed(2)}</span>
             </div>
 
-            <Button onClick={handlePlaceOrder} className="w-full text-lg cursor-pointer select-none bg-indigo-500 hover:bg-indigo-600">
-              PLACE ORDER
+            <Button onClick={handlePlaceOrder} disabled={isPlacingOrder} className="w-full text-lg cursor-pointer select-none bg-indigo-500 hover:bg-indigo-600">
+              {isPlacingOrder ? "PLACING ORDER..." : "PLACE ORDER"}
             </Button>
           </div>
         </div>
