@@ -55,3 +55,23 @@ export const updateUserSchema = z.object({
 });
 
 export type UpdateUserData = z.infer<typeof updateUserSchema>;
+
+/**
+ * Zod schema for placing an order.
+ */
+export const placeOrderSchema = z.object({
+  shippingCost: z.number().min(0),
+  shippingAddress: z.string().min(1, "Shipping address is required"),
+});
+
+export type PlaceOrderData = z.infer<typeof placeOrderSchema>;
+
+/**
+ * Zod schema for admin signup.
+ */
+export const adminSignUpSchema = z.object({
+  secretKey: z.string().min(1, "Secret key is required"),
+});
+
+export type AdminSignUpData = z.infer<typeof adminSignUpSchema>;
+
