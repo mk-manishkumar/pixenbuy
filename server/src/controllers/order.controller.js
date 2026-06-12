@@ -9,8 +9,8 @@ const placeOrder = asyncHandler(async (req, res) => {
 
 // GET /api/v1/orders
 const getUserOrders = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
+  const page = Number.parseInt(req.query.page) || 1;
+  const limit = Number.parseInt(req.query.limit) || 5;
   const result = await orderService.getUserOrders(req.user._id, page, limit);
   res.json(result);
 });
