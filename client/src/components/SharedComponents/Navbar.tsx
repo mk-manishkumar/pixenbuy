@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import { Input } from "@/components/ui/input";
-import { Search, LayoutGrid, ShoppingCart, Menu, LogIn, User, LayoutDashboard } from "lucide-react";
+import { Search, LayoutGrid, ShoppingCart, Menu, LogIn, User, Shield } from "lucide-react";
 import { useCartQuery } from "@/hooks/useCartQuery";
 import { useUserQuery } from "@/hooks/useUserQuery";
 import { getAllProducts } from "@/api/fakeStoreApi";
@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
             <div className="hidden md:flex items-center gap-4">
               {isAdmin ? (
                 <Link to="/admin/dashboard" className="flex items-center gap-1 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
-                  <LayoutDashboard size={18} />
+                  <Shield size={18} />
                   <span>Dashboard</span>
                 </Link>
               ) : (
