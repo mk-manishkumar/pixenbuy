@@ -35,7 +35,7 @@ export const Footer = () => {
         </div>
       </footer>
       <div className="bg-gray-900 text-white py-2 text-center">
-        <p className="text-xs md:text-sm">Powered by PixenBuy, 2025</p>
+        <p className="text-xs md:text-sm">Powered by PixenBuy, 2026</p>
       </div>
     </div>
   );
