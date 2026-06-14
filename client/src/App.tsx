@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { setTokenGetter } from "./api/backendApi";
 import { useCreateUser } from "./hooks/useUserQuery";
 import Home from "./pages/Home";
@@ -71,6 +71,7 @@ const appRouter = createBrowserRouter([
 
 const App = () => {
   const { getToken, isSignedIn, userId } = useAuth();
+  const { user } = useUser();
   const { mutate: createUser } = useCreateUser();
 
   // Wire up the Clerk token getter for the backend API client
@@ -80,10 +81,13 @@ const App = () => {
 
   // Auto-create backend user profile on first sign-in
   useEffect(() => {
-    if (isSignedIn && userId) {
-      createUser({ email: "", name: "" });
+    if (isSignedIn && userId && user) {
+      createUser({ 
+        email: user.primaryEmailAddress?.emailAddress || "", 
+        name: user.fullName || "" 
+      });
     }
-  }, [isSignedIn, userId, createUser]);
+  }, [isSignedIn, userId, user, createUser]);
 
   return <RouterProvider router={appRouter} />;
 };
