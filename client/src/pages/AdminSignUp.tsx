@@ -92,7 +92,8 @@ const AdminSignUp: React.FC = () => {
 
               {isError && (
                 <p className="text-red-500 text-sm">
-                  {(error as Error)?.message || "Failed to create admin account"}
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {(error as any)?.response?.data?.error || (error as Error)?.message || "Failed to create admin account"}
                 </p>
               )}
 
