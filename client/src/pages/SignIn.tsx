@@ -9,8 +9,10 @@ const SignIn: React.FC = () => {
       <Navbar />
       <main className="flex-grow flex items-center justify-center bg-gray-50 py-12">
         <ClerkSignIn
+          routing="path"
+          path="/sign-in"
           signUpUrl="/sign-up"
-          afterSignInUrl="/"
+          fallbackRedirectUrl="/"
         />
       </main>
       <Footer />
