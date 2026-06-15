@@ -8,7 +8,7 @@ const SignUp: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow flex items-center justify-center bg-gray-50 py-12">
-        <ClerkSignUp signInUrl="/sign-in" />
+        <ClerkSignUp routing="path" path="/sign-up" signInUrl="/sign-in" />
       </main>
       <Footer />
     </div>

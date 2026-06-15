@@ -50,7 +50,11 @@ const createAdmin = async (clerkId, { email, name, secretKey }) => {
   // Check if an admin already exists
   const existingAdmin = await User.findOne({ role: "admin" });
   if (existingAdmin) {
-    throw new ApiError(409, "An admin account already exists");
+    if (existingAdmin.clerkId !== clerkId) {
+      throw new ApiError(409, "An admin account already exists");
+    }
+    // If it's the same user, just return success
+    return { user: existingAdmin, created: false };
   }
 
   // Check if this clerk user already has an account
