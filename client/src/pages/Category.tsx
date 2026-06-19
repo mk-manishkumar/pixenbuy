@@ -59,14 +59,14 @@ const Category: React.FC = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
-                  <div key={product.id} className="bg-white rounded shadow-sm p-4 flex flex-col items-center gap-2 text-center hover:shadow-xl transition duration-300">
+                  <Link key={product.id} to={`/product/${slugify(product.title)}`} className="bg-white rounded shadow-sm p-4 flex flex-col items-center gap-2 text-center hover:shadow-xl transition duration-300 group">
                     <img src={product.image} alt={product.title} className="h-48 mx-auto object-contain" />
-                    <Link to={`/product/${slugify(product.title)}`} className="mt-2 text-sm font-medium cursor-pointer hover:underline">
+                    <span className="mt-2 text-sm font-medium cursor-pointer group-hover:underline">
                       {product.title}
-                    </Link>
+                    </span>
                     <p className="text-sm text-gray-600">${product.price}</p>
                     <p className="text-sm text-gray-600 mb-4">Rating: ⭐ {product.rating.rate} / 5</p>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

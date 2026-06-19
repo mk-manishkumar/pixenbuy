@@ -45,14 +45,12 @@ const ProductCard: React.FC = () => {
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {paginatedProducts.map((product) => (
-          <div key={product.id} className="border rounded-lg p-4 shadow-md flex flex-col items-center text-center hover:shadow-xl transition duration-300">
+          <Link key={product.id} to={`/product/${slugify(product.title)}`} className="border rounded-lg p-4 shadow-md flex flex-col items-center text-center hover:shadow-xl transition duration-300 group">
             <img src={product.image} alt={product.title} className="h-40 object-contain mb-4" />
-            <Link to={`/product/${slugify(product.title)}`}>
-              <h3 className="text-lg font-semibold mb-2 line-clamp-2 hover:underline cursor-pointer">{product.title}</h3>
-            </Link>
+            <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:underline cursor-pointer">{product.title}</h3>
             <p className="text-primary font-bold text-xl mb-1">${product.price}</p>
             <p className="text-sm text-gray-600 mb-4">Rating: ⭐ {product.rating.rate} / 5</p>
-          </div>
+          </Link>
         ))}
       </div>
 
