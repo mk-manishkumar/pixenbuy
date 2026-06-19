@@ -111,20 +111,27 @@ const Navbar: React.FC = () => {
 
           {/* Auth section */}
           <SignedIn>
-            <div className="hidden md:flex items-center gap-4">
-              {isAdmin ? (
-                <Link to="/admin/dashboard" className="flex items-center gap-1 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
+            {isAdmin && (
+              <div className="hidden md:flex items-center gap-4">
+                <Link to="/admin/dashboard" className="flex items-center gap-1 text-sm text-gray-700 hover:text-indigo-600 transition-colors mr-2">
                   <Shield size={18} />
                   <span>Dashboard</span>
                 </Link>
-              ) : (
-                <Link to="/profile" className="flex items-center gap-1 text-sm text-gray-700 hover:text-indigo-600 transition-colors">
-                  <User size={18} />
-                  <span>Profile</span>
-                </Link>
-              )}
-            </div>
-            <UserButton />
+              </div>
+            )}
+            <UserButton>
+              <UserButton.MenuItems>
+                {!isAdmin && (
+                  <UserButton.Action
+                    label="View Profile"
+                    labelIcon={<User size={15} />}
+                    onClick={() => navigate("/profile")}
+                  />
+                )}
+                <UserButton.Action label="manageAccount" />
+                <UserButton.Action label="signOut" />
+              </UserButton.MenuItems>
+            </UserButton>
           </SignedIn>
           <SignedOut>
             <Link to="/sign-in" className="flex items-center gap-1 text-sm text-gray-700 hover:text-black">
@@ -148,13 +155,9 @@ const Navbar: React.FC = () => {
             Categories
           </Link>
           <SignedIn>
-            {isAdmin ? (
+            {isAdmin && (
               <Link to="/admin/dashboard" onClick={() => setMenuOpen(false)} className="text-sm text-gray-700 hover:text-indigo-600">
                 Dashboard
-              </Link>
-            ) : (
-              <Link to="/profile" onClick={() => setMenuOpen(false)} className="text-sm text-gray-700 hover:text-indigo-600">
-                Profile
               </Link>
             )}
           </SignedIn>
