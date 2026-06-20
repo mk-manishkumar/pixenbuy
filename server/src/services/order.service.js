@@ -1,12 +1,13 @@
 import Cart from "../models/Cart.model.js";
 import Order from "../models/Order.model.js";
+import User from "../models/User.model.js";
 import { ApiError } from "../utils/errorHandler.js";
 
 /**
  * Place an order by snapshotting the user's cart.
  * Clears the cart after order is created.
  */
-const placeOrder = async (userId, { shippingCost, shippingAddress }) => {
+const placeOrder = async (userId, { shippingCost, shippingAddress, phone, name }) => {
   const cart = await Cart.findOne({ userId });
   if (!cart || cart.items.length === 0) {
     throw new ApiError(400, "Cart is empty");
@@ -41,6 +42,15 @@ const placeOrder = async (userId, { shippingCost, shippingAddress }) => {
   // Clear the cart
   cart.items = [];
   await cart.save();
+
+  // Update user profile for future purchases
+  await User.findByIdAndUpdate(userId, {
+    $set: {
+      ...(phone && { phone }),
+      ...(shippingAddress && { address: shippingAddress }),
+      ...(name && { name })
+    }
+  });
 
   return order;
 };
