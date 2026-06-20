@@ -1,6 +1,6 @@
 import { Footer } from "@/components/SharedComponents/Footer";
 import Navbar from "@/components/SharedComponents/Navbar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { useClearCart } from "@/hooks/useCartMutations";
 import { useUserQuery } from "@/hooks/useUserQuery";
 import { checkoutFormSchema } from "@/utils/schemas";
 import { usePlaceOrder } from "@/hooks/useOrderQuery";
+import { useCreateRazorpayOrder, useVerifyPayment } from "@/hooks/usePaymentQuery";
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ const Checkout: React.FC = () => {
   const { data: user } = useUserQuery();
   const { mutate: clearCart } = useClearCart();
   const { mutate: placeOrder, isPending: isPlacingOrder } = usePlaceOrder();
+  const { mutate: createRazorpayOrder, isPending: isCreatingPayment } = useCreateRazorpayOrder();
+  const { mutate: verifyPayment, isPending: isVerifying } = useVerifyPayment();
 
   const [shippingCost, setShippingCost] = useState(10);
   const [name, setName] = useState(user?.name || "");
@@ -32,6 +35,16 @@ const Checkout: React.FC = () => {
   const cartItems = cart?.items ?? [];
   const totalItems = cart?.totalItems ?? 0;
   const totalCost = cart?.totalPrice ?? 0;
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   // Redirect if not signed in or cart is empty
   if (!isSignedIn) {
@@ -63,15 +76,71 @@ const Checkout: React.FC = () => {
     
     // Proceed to place order via backend API
     placeOrder(
-      { shippingCost, shippingAddress: address },
+      { shippingCost, shippingAddress: address, phone, name },
       {
-        onSuccess: () => {
-          setFinalCost(totalCost + shippingCost);
-          setShowPopup(true);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onSuccess: (orderData: any) => {
+          const orderId = orderData._id;
+
+          createRazorpayOrder(
+            { orderId },
+            {
+              onSuccess: (rzpOrder) => {
+                const options = {
+                  key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+                  amount: rzpOrder.amount,
+                  currency: rzpOrder.currency,
+                  name: "PixenBuy",
+                  description: "Order Payment",
+                  order_id: rzpOrder.orderId,
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  handler: function (response: any) {
+                    verifyPayment(
+                      {
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                        orderId: orderId,
+                      },
+                      {
+                        onSuccess: () => {
+                          setFinalCost(totalCost + shippingCost);
+                          setShowPopup(true);
+                        },
+                        onError: (err) => {
+                          console.error("Payment verification failed:", err);
+                          alert("Payment verification failed");
+                        },
+                      }
+                    );
+                  },
+                  prefill: {
+                    name: name,
+                    email: email,
+                    contact: phone,
+                  },
+                  theme: {
+                    color: "#6366f1",
+                  },
+                };
+
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const rzp1 = new (window as any).Razorpay(options);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                rzp1.on("payment.failed", function (response: any) {
+                  alert("Payment failed: " + response.error.description);
+                });
+                rzp1.open();
+              },
+              onError: (err) => {
+                console.error("Failed to initialize payment gateway:", err);
+                alert("Failed to initialize payment gateway.");
+              },
+            }
+          );
         },
         onError: (err) => {
           console.error("Failed to place order:", err);
-          // Could show toast error here
         }
       }
     );
@@ -147,8 +216,8 @@ const Checkout: React.FC = () => {
               <span>${(totalCost + shippingCost).toFixed(2)}</span>
             </div>
 
-            <Button onClick={handlePlaceOrder} disabled={isPlacingOrder} className="w-full text-lg cursor-pointer select-none bg-indigo-500 hover:bg-indigo-600">
-              {isPlacingOrder ? "PLACING ORDER..." : "PLACE ORDER"}
+            <Button onClick={handlePlaceOrder} disabled={isPlacingOrder || isCreatingPayment || isVerifying} className="w-full text-lg cursor-pointer select-none bg-indigo-500 hover:bg-indigo-600">
+              {isPlacingOrder || isCreatingPayment || isVerifying ? "PROCESSING..." : "PLACE ORDER"}
             </Button>
           </div>
         </div>
@@ -162,7 +231,7 @@ const Checkout: React.FC = () => {
           <div className="bg-white w-[90%] max-w-md p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-xl font-bold mb-4">Order Placed Successfully!</h2>
             <p className="text-gray-600 mb-6">
-              Thank you {name} for your purchase. Your order has been received. Please pay ${finalCost.toFixed(2)} to the delivery person.
+              Thank you {name} for your purchase. Your payment of ${finalCost.toFixed(2)} was successful! We will ship your items shortly.
             </p>
             <Button onClick={goToHome} className="bg-green-600 hover:bg-green-700 cursor-pointer px-4 py-2 rounded">
               Go to Home
