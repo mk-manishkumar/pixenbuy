@@ -35,6 +35,8 @@ interface OrdersResponse {
 interface PlaceOrderPayload {
   shippingCost: number;
   shippingAddress: string;
+  phone?: string;
+  name?: string;
 }
 
 /**

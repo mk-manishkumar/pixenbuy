@@ -23,7 +23,7 @@ class ApiError extends Error {
  *   - Everything else (500)
  */
 const errorHandler = (err, _req, res, _next) => {
-  console.error(err.stack);
+  console.error("Server Error Details:", err);
 
   // Custom API errors
   if (err instanceof ApiError) {

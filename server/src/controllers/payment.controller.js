@@ -1,5 +1,5 @@
 import Razorpay from "razorpay";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import Order from "../models/Order.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/errorHandler.js";
@@ -15,14 +15,18 @@ export const createRazorpayOrder = asyncHandler(async (req, res) => {
     throw new ApiError(403, "Not authorized to pay for this order");
   }
 
+  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    throw new ApiError(500, "Razorpay API keys are missing. Please add them to the server/.env file.");
+  }
+
   const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
+    key_id: process.env.RAZORPAY_KEY_ID.trim(),
+    key_secret: process.env.RAZORPAY_KEY_SECRET.trim(),
   });
 
   const options = {
     amount: Math.round((order.totalPrice + order.shippingCost) * 100), // amount in the smallest currency unit
-    currency: "USD",
+    currency: "INR",
     receipt: order._id.toString(),
   };
 
