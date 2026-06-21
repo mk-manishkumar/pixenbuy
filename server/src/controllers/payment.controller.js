@@ -1,6 +1,7 @@
 import Razorpay from "razorpay";
 import crypto from "node:crypto";
 import Order from "../models/Order.model.js";
+import Cart from "../models/Cart.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/errorHandler.js";
 import dotenv from "dotenv";
@@ -66,6 +67,13 @@ export const verifyPayment = asyncHandler(async (req, res) => {
     order.paymentStatus = "paid";
     order.razorpayPaymentId = razorpay_payment_id;
     await order.save();
+
+    // Clear the cart now that payment is successful
+    const cart = await Cart.findOne({ userId: req.user._id });
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+    }
 
     res.json({ success: true, message: "Payment verified successfully" });
   } else {

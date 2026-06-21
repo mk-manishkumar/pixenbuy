@@ -39,10 +39,6 @@ const placeOrder = async (userId, { shippingCost, shippingAddress, phone, name }
     status: "placed",
   });
 
-  // Clear the cart
-  cart.items = [];
-  await cart.save();
-
   // Update user profile for future purchases
   await User.findByIdAndUpdate(userId, {
     $set: {
@@ -62,12 +58,12 @@ const getUserOrders = async (userId, page = 1, limit = 5) => {
   const skip = (page - 1) * limit;
 
   const [orders, total] = await Promise.all([
-    Order.find({ userId })
+    Order.find({ userId, paymentStatus: "paid" })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .lean(),
-    Order.countDocuments({ userId }),
+    Order.countDocuments({ userId, paymentStatus: "paid" }),
   ]);
 
   return {
