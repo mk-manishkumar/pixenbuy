@@ -17,6 +17,7 @@ const getDashboardStats = async () => {
 
   // Aggregate order stats
   const orderStats = await Order.aggregate([
+    { $match: { paymentStatus: "paid" } },
     {
       $group: {
         _id: null,
@@ -37,6 +38,7 @@ const getDashboardStats = async () => {
 
   // Per-product purchase counts
   const productPurchaseCounts = await Order.aggregate([
+    { $match: { paymentStatus: "paid" } },
     { $unwind: "$items" },
     {
       $group: {
