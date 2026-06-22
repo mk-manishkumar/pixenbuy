@@ -9,6 +9,7 @@ import cartRoutes from "./src/routes/cart.routes.js";
 import orderRoutes from "./src/routes/order.routes.js";
 import paymentRoutes from "./src/routes/payment.routes.js";
 import adminRoutes from "./src/routes/admin.routes.js";
+import aiRoutes from "./src/routes/ai.routes.js";
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/payments", paymentRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/ai", aiRoutes);
 
 // Health check
 app.get("/", (_req, res) => {

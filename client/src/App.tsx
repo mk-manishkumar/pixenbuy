@@ -14,6 +14,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminSignUp from "./pages/AdminSignUp";
 import ProductDetails from "./components/SharedComponents/ProductDetails";
 import ErrorPage from "./pages/ErrorPage";
+import AiChatWidget from "./components/SharedComponents/AiChatWidget";
 
 const appRouter = createBrowserRouter([
   {
@@ -89,7 +90,12 @@ const App = () => {
     }
   }, [isSignedIn, userId, user, createUser]);
 
-  return <RouterProvider router={appRouter} />;
+  return (
+    <>
+      <RouterProvider router={appRouter} />
+      <AiChatWidget />
+    </>
+  );
 };
 
 export default App;
