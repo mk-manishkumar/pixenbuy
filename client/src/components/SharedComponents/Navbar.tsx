@@ -121,13 +121,11 @@ const Navbar: React.FC = () => {
             )}
             <UserButton>
               <UserButton.MenuItems>
-                {!isAdmin && (
-                  <UserButton.Action
-                    label="View Profile"
-                    labelIcon={<User size={15} />}
-                    onClick={() => navigate("/profile")}
-                  />
-                )}
+                <UserButton.Action
+                  label="View Profile"
+                  labelIcon={<User size={15} />}
+                  onClick={() => navigate("/profile")}
+                />
                 <UserButton.Action label="manageAccount" />
                 <UserButton.Action label="signOut" />
               </UserButton.MenuItems>
