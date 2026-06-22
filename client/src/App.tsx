@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth, useUser, SignedIn } from "@clerk/clerk-react";
 import { setTokenGetter } from "./api/backendApi";
 import { useCreateUser } from "./hooks/useUserQuery";
 import Home from "./pages/Home";
@@ -93,7 +93,9 @@ const App = () => {
   return (
     <>
       <RouterProvider router={appRouter} />
-      <AiChatWidget />
+      <SignedIn>
+        <AiChatWidget />
+      </SignedIn>
     </>
   );
 };
