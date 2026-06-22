@@ -11,7 +11,7 @@ interface Message {
 const AiChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { id: "msg-0", role: "ai", content: "Hi there! I'm PixenBot. Looking for a specific product or need some shopping advice?" }
+    { id: "msg-0", role: "ai", content: "Hi there! I'm Pixenbot. Looking for a specific product or need some shopping advice?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -62,21 +62,21 @@ const AiChatWidget: React.FC = () => {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-20 z-50 p-4 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-transform transform ${isOpen ? 'scale-0' : 'scale-100'}`}
+        className={`fixed bottom-6 right-6 z-50 p-4 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-transform transform ${isOpen ? 'scale-0' : 'scale-100'}`}
       >
         <MessageCircle size={28} />
       </button>
 
       {/* Chat Window overlay */}
       <div 
-        className={`fixed bottom-6 right-20 z-50 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all duration-300 origin-bottom-right ${isOpen ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-0 opacity-0 pointer-events-none'}`}
+        className={`fixed bottom-6 right-6 z-50 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all duration-300 origin-bottom-right ${isOpen ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-0 opacity-0 pointer-events-none'}`}
         style={{ height: "500px", maxHeight: "80vh" }}
       >
         {/* Header */}
         <div className="bg-indigo-600 text-white p-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Bot size={24} />
-            <h3 className="font-semibold text-lg">PixenBot</h3>
+            <h3 className="font-semibold text-lg">Pixenbot</h3>
           </div>
           <button onClick={() => setIsOpen(false)} className="text-indigo-100 hover:text-white transition-colors">
             <X size={20} />
