@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Bot } from "lucide-react";
+import { useAuth } from "@clerk/clerk-react";
 import backendApi from "@/api/backendApi";
 
 interface Message {
@@ -9,6 +10,8 @@ interface Message {
 }
 
 const AiChatWidget: React.FC = () => {
+  const { isSignedIn } = useAuth();
+  const [isChatDisabled, setIsChatDisabled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { id: "msg-0", role: "ai", content: "Hi there! I'm Pixenbot. Looking for a specific product or need some shopping advice?" }
@@ -28,11 +31,24 @@ const AiChatWidget: React.FC = () => {
   }, [messages, isOpen]);
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || isChatDisabled) return;
 
     const userMessage = input.trim();
     setInput("");
     setMessages(prev => [...prev, { id: `msg-${Date.now()}`, role: "user", content: userMessage }]);
+    
+    if (!isSignedIn) {
+      setTimeout(() => {
+        setMessages(prev => [...prev, { 
+          id: `msg-${Date.now() + 1}`, 
+          role: "ai", 
+          content: "Please sign in or sign up to use the chat feature!" 
+        }]);
+        setIsChatDisabled(true);
+      }, 500);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -116,13 +132,13 @@ const AiChatWidget: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask about our products..."
+              placeholder={isChatDisabled ? "Chat disabled for guests" : "Ask about our products..."}
               className="flex-1 bg-transparent outline-none text-sm text-gray-700"
-              disabled={isLoading}
+              disabled={isLoading || isChatDisabled}
             />
             <button 
               onClick={handleSend}
-              disabled={!input.trim() || isLoading}
+              disabled={!input.trim() || isLoading || isChatDisabled}
               className="text-indigo-600 disabled:text-gray-400 hover:text-indigo-800 transition-colors flex-shrink-0"
             >
               <Send size={18} />
