@@ -11,7 +11,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
-import AdminSignUp from "./pages/AdminSignUp";
+import AdminUsers from "./pages/AdminUsers";
+import AdminShipments from "./pages/AdminShipments";
 import ProductDetails from "./components/SharedComponents/ProductDetails";
 import ErrorPage from "./pages/ErrorPage";
 import AiChatWidget from "./components/SharedComponents/AiChatWidget";
@@ -61,9 +62,16 @@ const appRouter = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/admin/sign-up",
-    element: <AdminSignUp />,
+    path: "/admin/users",
+    element: <AdminUsers />,
+    errorElement: <ErrorPage />,
   },
+  {
+    path: "/admin/shipments",
+    element: <AdminShipments />,
+    errorElement: <ErrorPage />,
+  },
+
   {
     path: "*",
     element: <ErrorPage />,

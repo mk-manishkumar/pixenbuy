@@ -19,11 +19,6 @@ interface CreateUserPayload {
   name?: string;
 }
 
-interface CreateAdminPayload {
-  email: string;
-  name?: string;
-  secretKey: string;
-}
 
 interface UpdateUserPayload {
   name?: string;
@@ -68,22 +63,6 @@ export const useCreateUser = () => {
   });
 };
 
-/**
- * Creates an admin account with secret key validation.
- */
-export const useCreateAdmin = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation<UserProfile, Error, CreateAdminPayload>({
-    mutationFn: async (payload) => {
-      const { data } = await backendApi.post("/api/v1/user/admin", payload);
-      return data;
-    },
-    onSuccess: (data) => {
-      queryClient.setQueryData(["user"], data);
-    },
-  });
-};
 
 /**
  * Updates the current user's profile.

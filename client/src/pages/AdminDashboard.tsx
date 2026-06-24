@@ -58,6 +58,38 @@ const AdminDashboard: React.FC = () => {
       <>
         <DashboardStatsCards stats={stats} />
         <DashboardProductsTable stats={stats} />
+
+        <div className="mt-8 bg-white rounded-2xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
+          <div 
+            onClick={() => navigate('/admin/users')}
+            className="p-6 flex items-center justify-between cursor-pointer group border-b border-gray-100"
+          >
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">Registered Users Directory</h2>
+              <p className="text-gray-500 mt-1">View contact information and details of all {stats.totalUsers} registered users.</p>
+            </div>
+            <div className="text-indigo-500 bg-indigo-50 p-3 rounded-full group-hover:bg-indigo-100 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </div>
+          
+          <div 
+            onClick={() => navigate('/admin/shipments')}
+            className="p-6 flex items-center justify-between cursor-pointer group"
+          >
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">Shipment & Order Details</h2>
+              <p className="text-gray-500 mt-1">Track customer orders, products purchased, and shipping addresses.</p>
+            </div>
+            <div className="text-indigo-500 bg-indigo-50 p-3 rounded-full group-hover:bg-indigo-100 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+          </div>
+        </div>
       </>
     );
   };

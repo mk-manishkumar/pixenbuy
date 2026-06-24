@@ -9,5 +9,7 @@ const router = Router();
 router.use(requireAuth(), resolveUser, requireAdmin);
 
 router.get("/dashboard", adminController.getDashboardStats);
+router.get("/users", adminController.getAllUsers);
+router.get("/orders", adminController.getAllOrders);
 
 export default router;

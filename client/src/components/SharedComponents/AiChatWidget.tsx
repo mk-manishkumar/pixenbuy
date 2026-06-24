@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Bot } from "lucide-react";
 import { useAuth } from "@clerk/clerk-react";
 import backendApi from "@/api/backendApi";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Message {
   id: string;
@@ -78,7 +80,7 @@ const AiChatWidget: React.FC = () => {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 p-4 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-transform transform ${isOpen ? 'scale-0' : 'scale-100'}`}
+        className={`fixed bottom-6 right-6 z-50 p-4 bg-indigo-600 text-white rounded-full shadow-lg cursor-pointer hover:bg-indigo-700 transition-transform transform ${isOpen ? 'scale-0' : 'scale-100'}`}
       >
         <MessageCircle size={28} />
       </button>
@@ -94,7 +96,7 @@ const AiChatWidget: React.FC = () => {
             <Bot size={24} />
             <h3 className="font-semibold text-lg">Pixenbot</h3>
           </div>
-          <button onClick={() => setIsOpen(false)} className="text-indigo-100 hover:text-white transition-colors">
+          <button onClick={() => setIsOpen(false)} className="text-indigo-100 hover:text-white transition-colors cursor-pointer">
             <X size={20} />
           </button>
         </div>
@@ -103,9 +105,13 @@ const AiChatWidget: React.FC = () => {
         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
           {messages.map((msg) => (
             <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] rounded-2xl p-3 ${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-none'}`}>
+              <div className={`max-w-[85%] rounded-2xl p-3 ${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-none overflow-x-auto'}`}>
                 {msg.role === 'ai' ? (
-                  <div className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</div>
+                  <div className="text-sm leading-relaxed markdown-content">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
                 ) : (
                   <div className="text-sm">{msg.content}</div>
                 )}
@@ -139,7 +145,7 @@ const AiChatWidget: React.FC = () => {
             <button 
               onClick={handleSend}
               disabled={!input.trim() || isLoading || isChatDisabled}
-              className="text-indigo-600 disabled:text-gray-400 hover:text-indigo-800 transition-colors flex-shrink-0"
+              className="text-indigo-600 disabled:text-gray-400 hover:text-indigo-800 transition-colors flex-shrink-0 cursor-pointer disabled:cursor-not-allowed"
             >
               <Send size={18} />
             </button>
