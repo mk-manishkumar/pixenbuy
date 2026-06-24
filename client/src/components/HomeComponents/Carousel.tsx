@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const images = ["https://placehold.co/1600x400/A0D9EF/000000?text=Shop+New+Arrivals", "https://placehold.co/1600x400/FFB996/000000?text=Exclusive+Deals+Daily", "https://placehold.co/1600x400/CEE6F3/000000?text=Discover+Our+Collection"];
+const images = ["/carousel_1.png", "/carousel_2.png", "/carousel_3.png"];
 
 export const Carousel: React.FC = () => {
   const [current, setCurrent] = useState(0);
@@ -15,11 +15,11 @@ export const Carousel: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full md:aspect-[16/5] aspect-[16/6] overflow-hidden">
+    <div className="relative w-full overflow-hidden">
       {/* Slides */}
       {images.map((img, index) => (
-        <div key={img} className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === current ? "opacity-100 z-10" : "opacity-0 z-0"}`}>
-          <img src={img} alt={`Slide ${index + 1}`} className="w-full h-full object-cover" style={{ objectFit: "cover", width: "100%", height: "100%" }} />
+        <div key={img} className={`${index === current ? "relative opacity-100 z-10" : "absolute inset-0 opacity-0 z-0"} transition-opacity duration-700 ease-in-out`}>
+          <img src={img} alt={`Slide ${index + 1}`} className="w-full h-auto object-contain" />
         </div>
       ))}
 

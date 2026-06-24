@@ -7,14 +7,14 @@ const features = [
     desc: "Enjoy a smooth and intuitive shopping journey designed to save your time and effort across all devices.",
   },
   {
-    img: "https://i.ibb.co/4wktbmc7/f2.png",
-    title: "Fast Delivery",
-    desc: "We ensure quick and reliable delivery so you receive your favorite products without any delays and worries.",
+    img: "https://img.icons8.com/fluency/96/artificial-intelligence.png",
+    title: "Smart Recommendations",
+    desc: "Our advanced AI shopping assistant analyzes your needs to instantly suggest the perfect products tailored just for you.",
   },
   {
     img: "https://i.ibb.co/6R877gFv/f3.png",
-    title: "24/7 Support",
-    desc: "Our dedicated support team is always available to resolve your queries and ensure a hassle-free experience.",
+    title: "24/7 AI Support",
+    desc: "Our intelligent Pixenbot is always online to answer your questions, help you find items, and ensure a hassle-free shopping experience.",
   },
 ];
 

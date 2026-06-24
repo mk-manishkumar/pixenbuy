@@ -9,12 +9,6 @@ const createUser = asyncHandler(async (req, res) => {
   res.status(created ? 201 : 200).json(user);
 });
 
-// POST /api/v1/user/admin
-const createAdmin = asyncHandler(async (req, res) => {
-  const { userId } = getAuth(req);
-  const { user, created } = await userService.createAdmin(userId, req.body);
-  res.status(created ? 201 : 200).json(user);
-});
 
 // GET /api/v1/user/me
 const getUser = asyncHandler(async (req, res) => {
@@ -33,4 +27,4 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.json({ message: "Account deleted successfully" });
 });
 
-export { createUser, createAdmin, getUser, updateUser, deleteUser };
+export { createUser, getUser, updateUser, deleteUser };

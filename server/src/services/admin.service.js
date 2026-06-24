@@ -80,4 +80,24 @@ const getDashboardStats = async () => {
   };
 };
 
-export { getDashboardStats };
+/**
+ * Get all registered users (excluding admins).
+ */
+const getAllUsers = async () => {
+  const users = await User.find({ role: "user" })
+    .select("-clerkId")
+    .sort({ createdAt: -1 });
+  return users;
+};
+
+/**
+ * Get all orders for shipment details.
+ */
+const getAllOrders = async () => {
+  const orders = await Order.find({ paymentStatus: "paid" })
+    .populate("userId", "name email")
+    .sort({ createdAt: -1 });
+  return orders;
+};
+
+export { getDashboardStats, getAllUsers, getAllOrders };
