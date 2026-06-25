@@ -20,12 +20,8 @@ app.disable("x-powered-by");
 connectDB();
 
 // Middleware
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN || "*",
-    credentials: true,
-  })
-);
+const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : "*";
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(clerkMiddleware());
 
