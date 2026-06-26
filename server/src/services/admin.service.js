@@ -9,10 +9,15 @@ const getDashboardStats = async () => {
   // Total registered users (excluding admin)
   const totalUsers = await User.countDocuments({ role: "user" });
 
-  // Fetch all products from FakeStoreAPI
+  // Fetch all products from FakeStoreAPI (handle potential Vercel IP blocks)
   const axios = (await import("axios")).default;
-  const productsRes = await axios.get("https://fakestoreapi.com/products");
-  const products = productsRes.data;
+  let products = [];
+  try {
+    const productsRes = await axios.get("https://fakestoreapi.com/products");
+    products = productsRes.data;
+  } catch (error) {
+    console.warn("Could not fetch from FakeStoreAPI, it might be blocking Vercel:", error.message);
+  }
   const totalProducts = products.length;
 
   // Aggregate order stats
