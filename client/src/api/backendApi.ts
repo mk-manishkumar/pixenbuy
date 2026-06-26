@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Parse the environment variable if it's a comma-separated list
 const envBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-const apiUrls = envBaseUrl.split(",");
+const apiUrls = envBaseUrl.split(",").map((url: string) => url.trim());
 
 // If multiple URLs exist, use the first for dev and the second for production
 let baseURL = apiUrls[0];
