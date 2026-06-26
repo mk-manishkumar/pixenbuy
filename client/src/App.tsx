@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { setTokenGetter } from "./api/backendApi";
-import { useCreateUser } from "./hooks/useUserQuery";
+import { useCreateUser, useUserQuery } from "./hooks/useUserQuery";
 import Home from "./pages/Home";
 import Category from "./pages/Category";
 import Cart from "./pages/Cart";
@@ -82,6 +82,7 @@ const App = () => {
   const { getToken, isSignedIn, userId } = useAuth();
   const { user } = useUser();
   const { mutate: createUser } = useCreateUser();
+  const { data: dbUser } = useUserQuery();
 
   // Wire up the Clerk token getter for the backend API client
   useEffect(() => {
@@ -101,7 +102,7 @@ const App = () => {
   return (
     <>
       <RouterProvider router={appRouter} />
-      <AiChatWidget />
+      {dbUser?.role !== "admin" && <AiChatWidget />}
     </>
   );
 };
