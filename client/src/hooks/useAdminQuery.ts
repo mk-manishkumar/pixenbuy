@@ -30,8 +30,38 @@ export const useDashboardStats = () => {
   return useQuery<DashboardStats>({
     queryKey: ["admin", "dashboard"],
     queryFn: async () => {
+      // 1. Fetch the purchase counts and user stats from your backend
       const { data } = await backendApi.get("/api/v1/admin/dashboard");
-      return data;
+      
+      // 2. Fetch the products from FakeStoreAPI directly from the user's browser (bypasses Vercel IP blocks)
+      const productsRes = await fetch("https://fakestoreapi.com/products");
+      const products = await productsRes.json();
+
+      // 3. Merge them together exactly like the backend used to
+      const productStats = products.map((product: { id: number; title: string; price: number; category: string }) => {
+        const purchaseData = data.productPurchaseCounts.find(
+          (p: { _id: number; totalQuantity: number; totalRevenue: number }) => p._id === product.id
+        );
+        return {
+          productId: product.id,
+          title: product.title,
+          price: product.price,
+          category: product.category,
+          totalQuantity: purchaseData ? purchaseData.totalQuantity : 0,
+          totalRevenue: purchaseData
+            ? Math.round(purchaseData.totalRevenue * 100) / 100
+            : 0,
+        };
+      });
+
+      return {
+        totalUsers: data.totalUsers,
+        totalProducts: products.length,
+        totalOrders: data.totalOrders,
+        totalItemsPurchased: data.totalItemsPurchased,
+        totalEarnings: data.totalEarnings,
+        productStats,
+      };
     },
     enabled: !!isSignedIn,
     staleTime: 1000 * 60 * 2, // 2 minutes — dashboard data doesn't need to be real-time
