@@ -9,17 +9,6 @@ const getDashboardStats = async () => {
   // Total registered users (excluding admin)
   const totalUsers = await User.countDocuments({ role: "user" });
 
-  // Fetch all products from FakeStoreAPI (handle potential Vercel IP blocks)
-  const axios = (await import("axios")).default;
-  let products = [];
-  try {
-    const productsRes = await axios.get("https://fakestoreapi.com/products");
-    products = productsRes.data;
-  } catch (error) {
-    console.warn("Could not fetch from FakeStoreAPI, it might be blocking Vercel:", error.message);
-  }
-  const totalProducts = products.length;
-
   // Aggregate order stats
   const orderStats = await Order.aggregate([
     { $match: { paymentStatus: "paid" } },
@@ -58,30 +47,12 @@ const getDashboardStats = async () => {
     { $sort: { totalQuantity: -1 } },
   ]);
 
-  // Merge with product list (include products with 0 purchases)
-  const productStats = products.map((product) => {
-    const purchaseData = productPurchaseCounts.find(
-      (p) => p._id === product.id
-    );
-    return {
-      productId: product.id,
-      title: product.title,
-      price: product.price,
-      category: product.category,
-      totalQuantity: purchaseData ? purchaseData.totalQuantity : 0,
-      totalRevenue: purchaseData
-        ? Math.round(purchaseData.totalRevenue * 100) / 100
-        : 0,
-    };
-  });
-
   return {
     totalUsers,
-    totalProducts,
     totalOrders: stats.totalOrders,
     totalItemsPurchased: stats.totalItemsPurchased,
     totalEarnings: Math.round(stats.totalEarnings * 100) / 100,
-    productStats,
+    productPurchaseCounts,
   };
 };
 
