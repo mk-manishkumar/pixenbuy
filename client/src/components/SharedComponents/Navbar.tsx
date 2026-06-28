@@ -23,7 +23,8 @@ const Navbar: React.FC = () => {
   const [results, setResults] = useState<Product[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const showSearchBar = location.pathname === "/" || location.pathname === "/categories";
+  const isAuthPage = location.pathname.includes('/sign-in') || location.pathname.includes('/sign-up');
+  const showSearchBar = !isAuthPage && (location.pathname === "/" || location.pathname === "/categories");
 
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
@@ -56,7 +57,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="w-full shadow-md bg-white relative z-50">
-      <div className="flex justify-between items-center py-3 px-6 md:px-12">
+      <div className={`flex items-center py-3 px-6 md:px-12 ${isAuthPage ? "justify-center" : "justify-between"}`}>
         <Link to="/" className="text-2xl md:text-3xl font-bold">
           <span className="text-red-600">PIXEN</span>BUY
         </Link>
@@ -83,66 +84,68 @@ const Navbar: React.FC = () => {
         )}
 
         {/* Desktop Icons */}
-        <div className="flex justify-center gap-6 items-center">
-          <div className="hidden md:flex">
-            <Link to="/categories">
-              <LayoutGrid className="cursor-pointer" size={20} />
-            </Link>
-          </div>
+        {!isAuthPage && (
+          <div className="flex justify-center gap-6 items-center">
+            <div className="hidden md:flex">
+              <Link to="/categories">
+                <LayoutGrid className="cursor-pointer" size={20} />
+              </Link>
+            </div>
 
-          {/* Cart icon — hidden for admin */}
-          <SignedIn>
-            {!isAdmin && (
+            {/* Cart icon — hidden for admin */}
+            <SignedIn>
+              {!isAdmin && (
+                <div className="flex items-center">
+                  <Link to="/cart" className="relative">
+                    <ShoppingCart className="cursor-pointer" size={20} />
+                    {uniqueItemsCount > 0 && <span className="absolute -top-2 -right-2 w-[20px] h-[20px] bg-[#e21717] rounded-full flex justify-center items-center text-white text-xs">{uniqueItemsCount}</span>}
+                  </Link>
+                </div>
+              )}
+            </SignedIn>
+            <SignedOut>
               <div className="flex items-center">
                 <Link to="/cart" className="relative">
                   <ShoppingCart className="cursor-pointer" size={20} />
-                  {uniqueItemsCount > 0 && <span className="absolute -top-2 -right-2 w-[20px] h-[20px] bg-[#e21717] rounded-full flex justify-center items-center text-white text-xs">{uniqueItemsCount}</span>}
                 </Link>
               </div>
-            )}
-          </SignedIn>
-          <SignedOut>
-            <div className="flex items-center">
-              <Link to="/cart" className="relative">
-                <ShoppingCart className="cursor-pointer" size={20} />
+            </SignedOut>
+
+            {/* Auth section */}
+            <SignedIn>
+              {isAdmin && (
+                <div className="hidden md:flex items-center gap-4">
+                  <Link to="/admin/dashboard" className="flex items-center gap-1 text-sm text-gray-700 hover:text-indigo-600 transition-colors mr-2">
+                    <Shield size={18} />
+                    <span>Dashboard</span>
+                  </Link>
+                </div>
+              )}
+              <UserButton>
+                <UserButton.MenuItems>
+                  <UserButton.Action
+                    label="View Profile"
+                    labelIcon={<User size={15} />}
+                    onClick={() => navigate("/profile")}
+                  />
+                  <UserButton.Action label="manageAccount" />
+                  <UserButton.Action label="signOut" />
+                </UserButton.MenuItems>
+              </UserButton>
+            </SignedIn>
+            <SignedOut>
+              <Link to="/sign-in" className="flex items-center gap-1 text-sm text-gray-700 hover:text-black">
+                <LogIn size={18} />
+                <span className="hidden md:inline">Sign In</span>
               </Link>
-            </div>
-          </SignedOut>
+            </SignedOut>
 
-          {/* Auth section */}
-          <SignedIn>
-            {isAdmin && (
-              <div className="hidden md:flex items-center gap-4">
-                <Link to="/admin/dashboard" className="flex items-center gap-1 text-sm text-gray-700 hover:text-indigo-600 transition-colors mr-2">
-                  <Shield size={18} />
-                  <span>Dashboard</span>
-                </Link>
-              </div>
-            )}
-            <UserButton>
-              <UserButton.MenuItems>
-                <UserButton.Action
-                  label="View Profile"
-                  labelIcon={<User size={15} />}
-                  onClick={() => navigate("/profile")}
-                />
-                <UserButton.Action label="manageAccount" />
-                <UserButton.Action label="signOut" />
-              </UserButton.MenuItems>
-            </UserButton>
-          </SignedIn>
-          <SignedOut>
-            <Link to="/sign-in" className="flex items-center gap-1 text-sm text-gray-700 hover:text-black">
-              <LogIn size={18} />
-              <span className="hidden md:inline">Sign In</span>
-            </Link>
-          </SignedOut>
-
-          {/* Mobile Hamburger */}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
-            <Menu className="cursor-pointer text-green-600" />
-          </button>
-        </div>
+            {/* Mobile Hamburger */}
+            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
+              <Menu className="cursor-pointer text-green-600" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Mobile Menu */}
