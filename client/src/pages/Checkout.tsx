@@ -15,7 +15,7 @@ import { useCreateRazorpayOrder, useVerifyPayment } from "@/hooks/usePaymentQuer
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
-  const { isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
   const { data: cart } = useCartQuery();
   const { data: user } = useUserQuery();
   const { mutate: clearCart } = useClearCart();
@@ -125,15 +125,15 @@ const Checkout: React.FC = () => {
     );
   };
 
-  // Redirect if not signed in or cart is empty
-  if (!isSignedIn) {
-    navigate("/sign-in");
-    return null;
-  }
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      navigate("/sign-in");
+    } else if (isLoaded && isSignedIn && cartItems.length === 0 && !showPopup && !checkoutStarted) {
+      navigate("/cart");
+    }
+  }, [isLoaded, isSignedIn, cartItems.length, showPopup, checkoutStarted, navigate]);
 
-  // Prevent redirect if popup is showing or if checkout process has started
-  if (cartItems.length === 0 && !showPopup && !checkoutStarted) {
-    navigate("/cart");
+  if (!isLoaded || !isSignedIn) {
     return null;
   }
 

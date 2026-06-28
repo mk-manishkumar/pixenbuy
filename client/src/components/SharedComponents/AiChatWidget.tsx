@@ -75,6 +75,11 @@ const AiChatWidget: React.FC = () => {
     }
   };
 
+  const isAuthPage = globalThis.window !== undefined && 
+    (globalThis.window.location.pathname.includes('/sign-in') || globalThis.window.location.pathname.includes('/sign-up'));
+
+  if (isAuthPage) return null;
+
   return (
     <>
       {/* Floating Action Button */}
