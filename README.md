@@ -152,5 +152,5 @@ This project is licensed under the MIT License.
 ## 📬 Contact
 
 Have questions, feedback, or want to collaborate? Reach out!
-- **X (Twitter):** [@your_twitter_handle](https://x.com/your_twitter_handle)
+- **X (Twitter):** [@_manishmk](https://x.com/_manishmk)
 
